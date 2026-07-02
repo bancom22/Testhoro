@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>TikTok Horoscope Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg1:#0d0a16;--bg2:#1a1030;--card:rgba(22,14,40,.78);--gold:#f4ca64;--gold2:#ffe29a;--txt:#f8f4ff;--muted:#bbaed8;--line:rgba(244,202,100,.16);--shadow:0 24px 80px rgba(0,0,0,.35)}
+    *{box-sizing:border-box} 
+    body { margin:0; font-family:Sarabun,sans-serif; color:var(--txt); background:radial-gradient(circle at top, #24114a 0, transparent 30%),linear-gradient(135deg,var(--bg1),var(--bg2) 52%,#182a52); min-height:100vh; overflow-x: hidden; word-break: break-word; }
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+    .hero,.card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.12)),var(--card);border:1px solid var(--line);backdrop-filter:blur(18px);box-shadow:var(--shadow);border-radius:24px; overflow: hidden;}
+    .hero{padding:28px;margin-bottom:18px;position:relative}
+    .hero:after{content:'';position:absolute;inset:auto -60px -80px auto;width:220px;height:220px;background:radial-gradient(circle,rgba(244,202,100,.28),transparent 68%);filter:blur(6px)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(244,202,100,.12);border:1px solid rgba(244,202,100,.25);color:var(--gold2);font-size:.8rem;font-weight:700}
+    .title{font-size:clamp(1.5rem,5vw,3rem);line-height:1.2;margin:12px 0 10px;color:var(--gold2)}
+    .sub{color:var(--muted);max-width:760px;margin:0;font-size:0.95rem;}
+    .grid{display:grid;gap:16px}.two{grid-template-columns:1.05fr .95fr}
+    .section{padding:20px}.h2{margin:0 0 14px;color:var(--gold2);font-size:1.2rem}.muted{color:var(--muted)}
+    label{display:block;margin:14px 0 6px;color:#d8cbe9;font-size:.92rem} 
+    input,select,textarea{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.22);color:var(--txt);outline:none;transition:0.3s; font-size:16px !important;} 
+    input:focus,select:focus,textarea:focus{border-color:rgba(244,202,100,.55);box-shadow:0 0 0 3px rgba(244,202,100,.08)}
+    button{border:0;border-radius:14px;padding:14px 16px;cursor:pointer;font-weight:800;transition:0.2s;font-family:Sarabun,sans-serif;font-size:1rem;} 
+    button:active{transform:scale(0.98);} button:disabled{opacity: 0.5; cursor: not-allowed;}
+    .btn{background:linear-gradient(135deg,var(--gold),#d8a82b);color:#1b102a} .btn2{background:transparent;border:1px solid var(--gold);color:var(--gold2)}
+    .input-wrap{position:relative}.hide{display:none !important}.row{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035);margin:6px 8px 0 0; word-break: keep-all;}
+    
+    .cards { display: flex; overflow-x: auto; gap: 16px; padding-bottom: 16px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--gold) rgba(0,0,0,0.2); }
+    .cards::-webkit-scrollbar { height: 6px; }
+    .cards::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    .cards::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+    .product { flex: 0 0 280px; scroll-snap-align: start; padding:16px; border-radius:18px; border:1px solid var(--line); background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.18)); text-decoration:none; color:var(--txt); display: flex; flex-direction: column; justify-content: space-between; transition:0.3s; }
+    .product:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 10px 20px rgba(0,0,0,0.2)}
+    
+    .progress{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.step{padding:8px 12px;border-radius:999px;border:1px solid rgba(244,202,100,.2);background:rgba(255,255,255,.04);font-size:.82rem;color:var(--muted);transition:0.3s; white-space: nowrap;}
+    .step.active{color:var(--gold2);border-color:rgba(244,202,100,.45);background:rgba(244,202,100,.1)}
+    .chat{display:flex;flex-direction:column;gap:10px}.chat-status{display:none;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(244,202,100,.18);margin-bottom:12px}
+    .chat-status.show{display:flex}
+    .bubble{max-width:85%;padding:12px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 30px rgba(0,0,0,.15);line-height:1.5}
+    .bubble.you{align-self:flex-end;background:linear-gradient(135deg,rgba(244,202,100,.18),rgba(255,255,255,.06));border-bottom-right-radius:4px}
+    .bubble.ai{align-self:flex-start;background:rgba(255,255,255,.05);border-bottom-left-radius:4px}
+    .bubble .role{font-size:.75rem;color:var(--gold2);margin-bottom:4px;font-weight:600}
+    .composer{display:flex;gap:10px;align-items:center;margin-top:12px; flex-wrap: wrap;}
+    .composer textarea{flex:1;min-width:70%; min-height:52px;max-height:140px;resize:vertical}
+    .loading-overlay{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:120}.loading-overlay.show{display:flex}
+    .loading-box{min-width:280px;max-width:90vw;background:rgba(18,12,32,.92);border:1px solid var(--line);border-radius:20px;padding:22px;text-align:center;box-shadow:var(--shadow)}
+    
+    .cosmic-spinner { position: relative; width: 75px; height: 75px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+    .cosmic-spinner .ring { position: absolute; border-radius: 50%; border: 3px solid transparent; }
+    .cosmic-spinner .ring1 { width: 100%; height: 100%; border-top: 3px solid var(--gold); border-right: 3px solid rgba(244,202,100,0.2); animation: spin-forward 1.2s linear infinite; box-shadow: 0 -5px 15px rgba(244,202,100,0.2); }
+    .cosmic-spinner .ring2 { width: 70%; height: 70%; border-bottom: 3px solid #34d399; border-left: 3px solid rgba(52,211,153,0.2); animation: spin-reverse 1s linear infinite; box-shadow: 0 5px 15px rgba(52,211,153,0.2); }
+    .cosmic-spinner .star-core { font-size: 1.8rem; animation: pulse-core 1.2s alternate infinite ease-in-out; filter: drop-shadow(0 0 15px var(--gold)); }
+    
+    @keyframes spin-forward { 100% { transform: rotate(360deg); } }
+    @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+    @keyframes pulse-core { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(1.15); opacity: 1; } }
+
+    .typing-dots { display: flex; gap: 6px; margin-right: 12px; align-items: center; }
+    .typing-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: bounce-dot 1.4s infinite ease-in-out both; box-shadow: 0 0 8px rgba(244,202,100,0.6); }
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce-dot { 0%, 80%, 100% { transform: scale(0.3); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+    
+    .modal-backdrop{position:fixed;inset:0;background:rgba(10,8,18,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:150;padding:16px}.modal-backdrop.show{display:flex}
+   .modal{width:min(450px,100%); max-height: 90vh; display: flex; flex-direction: column; background:rgba(18,12,32,.98);border:1px solid var(--line);border-radius:24px;box-shadow:0 15px 50px rgba(0,0,0,0.5);overflow:hidden; animation:slideDown 0.3s ease-out;}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.06); flex-shrink: 0;}
+    .modal-title{margin:0;color:#f87171}
+    .modal-body{padding:24px 20px; text-align:center; font-size:1.1rem; line-height:1.6; color:#fff; overflow-y: auto; flex: 1;}
+    .modal-actions{display:flex;gap:10px;justify-content:center;padding:16px 20px 24px; flex-shrink: 0;}
+    @keyframes slideDown{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .toast{position:fixed;right:16px;bottom:16px;background:#130d22;border:1px solid var(--gold);color:var(--txt);padding:12px 16px;border-radius:14px;max-width:90vw;display:none;z-index:130;box-shadow:0 10px 30px rgba(0,0,0,0.5)}.toast.show{display:block;animation:slideUp 0.3s ease-out}@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+    
+    .premium-container { text-align: center; padding: 24px; border: 2px dashed var(--gold); border-radius: 18px; background: rgba(0,0,0,0.3); margin-top: 16px; }
+    .shake-box { font-size: 3.5rem; animation: shake 0.5s ease infinite alternate; display: inline-block; cursor: pointer; transition: 0.3s;}
+    .shake-box:hover { transform: scale(1.1); }
+    .premium-result-card { background: #fff; color: #000; padding: 24px; border-radius: 14px; margin-top: 14px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); border: 3px double #b41414; font-family: Sarabun, sans-serif; text-align: left; }
+    .premium-title { font-size: 1.5rem; font-weight: bold; color: #b41414; border-bottom: 2px solid #b41414; padding-bottom: 6px; margin-bottom: 12px; text-align: center;}
+    .seamsi-poem { font-style: italic; color: #333; line-height: 1.8; font-size: 1.1rem; margin: 12px 0; white-space: pre-line; text-align: center; font-weight: bold;}
+    .premium-grade { display: inline-block; padding: 4px 12px; background: #b41414; color: #fff; border-radius: 6px; font-weight: bold; margin-bottom: 12px; }
+    
+    .seamsi-wrapper { position: relative; width: 100px; height: 120px; margin: 0 auto; cursor: pointer; }
+    .seamsi-cylinder { font-size: 5rem; position: absolute; bottom: 0; left: 10px; z-index: 2; }
+    .seamsi-stick { width: 8px; height: 80px; background: #eab308; position: absolute; bottom: 20px; left: 45px; z-index: 1; border-radius: 4px; transition: 0.5s ease-out; }
+    .shake-anim { animation: shakeCylinder 0.4s infinite; }
+    .pop-stick { transform: translateY(-50px); background: #ef4444; }
+    @keyframes shakeCylinder { 0% { transform: rotate(-15deg); } 50% { transform: rotate(15deg); } 100% { transform: rotate(-15deg); } }
+    
+    .tarot-deck { font-size: 6rem; cursor: pointer; transition: 0.3s; line-height: 1; margin:0 auto; }
+    .tarot-deck:hover { transform: scale(1.1); }
+    .tarot-image { width: 100%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid #ccc;}
+
+    .text-lucky { color: #34d399; font-weight: 700; background: rgba(52,211,153,0.1); padding: 0 4px; border-radius: 4px; } 
+    .text-warning { color: #f87171; font-weight: 700; background: rgba(248,113,113,0.1); padding: 0 4px; border-radius: 4px; } 
+    .text-gold { color: var(--gold2); font-weight: 600; }
+    .lottery-box { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; margin-bottom: 12px; justify-content: center;}
+    .lottery-pill { background: linear-gradient(135deg, #f4ca64, #d8a82b); color: #1b102a; padding: 10px 16px; border-radius: 12px; font-weight: 800; font-size: 1.3rem; box-shadow: 0 4px 15px rgba(244,202,100,0.4); letter-spacing: 2px; border: 2px solid #fff;}
+    .disclaimer { font-size: 0.85rem; color: #f87171; margin-top: 8px; font-style: italic; text-align: center; }
+    .info-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(244,202,100,.1); border: 1px solid var(--gold); padding: 16px; border-radius: 14px; margin-bottom: 16px; font-size: 1rem; flex-wrap: wrap; gap: 12px; }
+    .chat-header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 12px;}
+
+    .readonly-banner { background: rgba(248, 113, 113, 0.15); border: 1px solid #f87171; color: #fff; padding: 12px; text-align: center; border-radius: 12px; margin-bottom: 16px; font-weight: bold; }
+
+    @media (max-width: 860px) { .two, .row { grid-template-columns: 1fr; flex-direction: column; } .bubble { max-width: 95%; } }
+    @media (max-width: 480px) {
+      .wrap { padding: 16px 12px 48px; } .hero { padding: 20px 16px; } .section { padding: 16px; }
+      .info-bar { flex-direction: column; align-items: stretch; text-align: center; } .info-bar button { width: 100%; margin-top: 8px; }
+      .result-top { flex-direction: column; gap: 12px; align-items: stretch; } .result-top div { display: flex; flex-direction: column; gap: 8px; } .result-top button { width: 100%; } .composer button { width: 100%; }
+      .cards { flex-direction: column; overflow-x: hidden; }
+      .product { width: 100%; flex: 1 1 auto; }
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; overflow: visible !important;}
+      .wrap { max-width: 100%; padding: 0; }
+      .hero, .progress, .result-top, .composer, .chat-status, #sessionInfo, #bottomLogoutContainer, .readonly-banner, .btn, .btn2 { display: none !important; }
+      .card { box-shadow: none; border: 1px solid #ccc; background: none; margin-bottom: 30px; page-break-after: always; break-after: page; }
+      .card:last-child { page-break-after: auto; break-after: auto; }
+      .text-lucky { color: #059669 !important; background: none !important; border: 1px solid #059669; padding: 2px 4px; } 
+      .text-warning { color: #dc2626 !important; background: none !important; border: 1px solid #dc2626; padding: 2px 4px; } 
+      .h2 { color: #000 !important; } .text-gold { color: #b45309 !important; }
+      .lottery-pill { border: 2px solid #000; color: #000; background: none; box-shadow: none; }
+      .bubble { border: 1px solid #000; color: #000; background: none; box-shadow: none; }
+      .bubble .role { color: #000; }
+      body::after { content: "© สงวนลิขสิทธิ์ Premium Horoscope"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 4rem; color: rgba(0,0,0,0.05); z-index: -999; white-space: nowrap; pointer-events: none; }
+      #chatMessages { max-height: none !important; overflow: visible !important; }
+      .bubble { page-break-inside: avoid; break-inside: avoid; }
+    }
+      .announcement-banner { background: linear-gradient(90deg, #b41414, #f87171); color: #fff; text-align: center; padding: 12px 16px; font-weight: bold; font-size: 1rem; box-shadow: 0 4px 15px rgba(180, 20, 20, 0.4); z-index: 1000; position: relative; }
+    .announcement-banner.hide { display: none !important; }
+
+    /* --- CSS สำหรับระบบ Rating ดาว --- */
+    .rating-container { text-align: center; background: rgba(0,0,0,0.3); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-top: 16px; margin-bottom: 24px; box-shadow: inset 0 0 20px rgba(0,0,0,0.2);}
+    .stars { display: flex; justify-content: center; gap: 10px; margin-top: 12px; flex-direction: row-reverse; }
+    .star { font-size: 3rem; color: rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    .star:hover, .star:hover ~ .star { color: #fbbf24; transform: scale(1.1); text-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+    .rating-submitted { display: none; color: #34d399; font-weight: bold; font-size: 1.1rem; margin-top: 16px; animation: slideUp 0.3s; }
+
+    /* --- CSS สำหรับระบบสแกนหน้าแบบไฮเทค --- */
+    .camera-container { width: 100%; max-width: 320px; margin: 0 auto; position: relative; border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+    #cameraPreview, #scanningImage { width: 100%; display: block; background: #000; object-fit: cover; }
+    .camera-overlay { position: absolute; inset: 0; border: 2px dashed rgba(255,255,255,0.4); border-radius: 50%; margin: 25px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6); pointer-events: none; }
+    
+    .cyber-scanner { border: 2px solid #0ea5e9; box-shadow: 0 0 20px rgba(14, 165, 233, 0.5); position: relative; }
+    .scanner-laser { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: #34d399; box-shadow: 0 0 15px #34d399, 0 0 30px #34d399; animation: scanLaser 1.8s infinite ease-in-out; z-index: 10; }
+    .scanner-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(14, 165, 233, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.2) 1px, transparent 1px); background-size: 25px 25px; z-index: 5; pointer-events: none; opacity: 0.6; }
+    
+    .scan-corners { position: absolute; inset: 12px; z-index: 6; pointer-events: none; }
+    .scan-corners::before, .scan-corners::after { content: ''; position: absolute; width: 35px; height: 35px; border-color: #0ea5e9; border-style: solid; }
+    .scan-corners::before { top: 0; left: 0; border-width: 3px 0 0 3px; }
+    .scan-corners::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
+    .scan-corners span::before, .scan-corners span::after { content: ''; position: absolute; width: 35px; height: 35px; border-color: #0ea5e9; border-style: solid; }
+    .scan-corners span::before { top: 0; right: 0; border-width: 3px 3px 0 0; }
+    .scan-corners span::after { bottom: 0; left: 0; border-width: 0 0 3px 3px; }
+    
+    @keyframes scanLaser { 0% { top: 5%; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 95%; opacity: 0; } }
+    .hud-text { color: #0ea5e9; font-family: monospace; font-size: 0.85rem; text-align: left; position: absolute; bottom: 12px; left: 16px; z-index: 20; text-shadow: 0 0 5px #000; animation: blinkText 1s infinite alternate; }
+    @keyframes blinkText { from { opacity: 0.6; } to { opacity: 1; } }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+</head>
+<body>
+  <div id="announcementBanner" class="announcement-banner hide"></div>
+ 
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-box" style="background: rgba(18,12,32,.95); box-shadow: 0 0 40px rgba(244,202,100,0.15); border-color: rgba(244,202,100,0.3);">
+      <div class="cosmic-spinner">
+        <div class="ring ring1"></div>
+        <div class="ring ring2"></div>
+        <div class="star-core">🔮</div>
+      </div>
+      <div id="loadingText" style="font-weight: 800; color: var(--gold2); font-size: 1.15rem; letter-spacing: 0.5px;">กำลังประมวลผล...</div>
+      <div style="color: var(--muted); font-size: 0.9rem; margin-top: 8px; font-style: italic;">ตั้งจิตอธิษฐาน อาจารย์กำลังสื่อสารกับดวงดาว</div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="alertModal">
+    <div class="modal">
+      <div class="modal-head"><h3 class="modal-title" id="alertTitle">⚠️ แจ้งเตือนจากระบบ</h3></div>
+      <div class="modal-body" id="alertBody"></div>
+      <div class="modal-actions"><button class="btn" style="width:120px;" onclick="document.getElementById('alertModal').classList.remove('show')">รับทราบ</button></div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <div class="modal-backdrop" id="emailModal">
+    <div class="modal">
+      <div class="modal-head"><h3 class="modal-title" style="color:var(--gold2);">📧 ส่งผลคำทำนายเข้าอีเมล</h3></div>
+      <div class="modal-body">
+        <p class="muted" style="text-align:left; font-size:0.95rem; line-height: 1.6;">ระบบจะรวบรวมผลคำทำนายทั้งหมด รวมถึงเซียมซี ไพ่ยิปซี และประวัติการปรึกษา ส่งตรงไปยังอีเมลของคุณ</p>
+        <label style="text-align:left; display:block; margin-top:10px;">อีเมลของคุณ</label>
+        <input id="userEmailInput" type="email" placeholder="example@email.com" style="margin-bottom:10px;">
+      </div>
+      <div class="modal-actions">
+        <button class="btn2" onclick="document.getElementById('emailModal').classList.remove('show')">ยกเลิก</button>
+        <button class="btn" id="confirmSendEmailBtn">ส่งข้อมูลเข้าอีเมล</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="wallpaperModal">
+    <div class="modal" style="width: min(500px, 100%);">
+      <div class="modal-head">
+        <h3 class="modal-title" style="color:var(--gold2);">📱 วอลเปเปอร์มงคลประจำดวงชะตา</h3>
+        <button class="modal-close" onclick="document.getElementById('wallpaperModal').classList.remove('show');" type="button">✕</button>
+      </div>
+      <div class="modal-body" style="background: #0a0410; padding: 20px; text-align: center;">
+        <p class="muted" style="font-size:0.9rem; margin-top:0; margin-bottom:15px;">✨ ระบบคำนวณสีมงคล ไพ่ยิปซี และตัวเลขนำโชคประกอบเป็นภาพเฉพาะคุณเรียบร้อยแล้วครับ</p>
+        
+        <div style="padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(244,202,100,0.15); border-radius: 20px; display: inline-block;">
+              <canvas id="talismanCanvas" width="1080" height="1920" style="max-height: 45vh; width: auto; max-width: 100%; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); display: block; margin: 0 auto;"></canvas>
+        </div>
+        
+        <p style="font-size:0.8rem; color:#f87171; margin-top:12px; margin-bottom:0; font-style:italic;">* สำหรับผู้ใช้ iOS หากกดปุ่มแล้วไม่ดาวน์โหลด ให้ใช้นิ้วแตะค้างที่รูปภาพแล้วเลือก "บันทึกไปยังแอปรูปภาพ"</p>
+      </div>
+      <div class="modal-actions" style="background: #0a0410; padding-bottom:24px;">
+        <button class="btn2" onclick="document.getElementById('wallpaperModal').classList.remove('show')" style="padding:12px 20px;">ปิดหน้าต่าง</button>
+        <button class="btn" id="downloadWallpaperBtn" style="padding:12px 24px; box-shadow: 0 4px 15px rgba(244,202,100,0.4);">💾 บันทึกรูปภาพลงเครื่อง</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="wrap">
+    <div class="hero">
+      <div class="badge">✨ Premium Horoscope</div>
+      <h1 class="title">ดูดวงราย 15 วัน พร้อมวัตถุมงคลแนะนำ</h1>
+      <p class="sub">อ้างอิงตำราพรหมชาติและโหราศาสตร์ไทย เจาะลึกรายบุคคล พร้อมเลขมงคลเสี่ยงโชค</p>
+    </div>
+    
+    <div class="progress">
+      <div class="step active" id="stepLogin">1. เข้าสู่ระบบ</div>
+      <div class="step" id="stepRead">2. รับคำทำนาย</div>
+      <div class="step" id="stepChat">3. ปรึกษาอาจารย์</div>
+      <div class="step" id="stepPdf">4. บันทึกผล</div>
+    </div>
+
+    <div id="loginView" class="card section" style="text-align: center; padding: 40px 20px;">
+      <div style="font-size: 3.5rem; margin-bottom: 10px; line-height: 1;">⛩️</div>
+      <h2 class="h2" style="font-size: 1.8rem; text-shadow: 0 2px 15px rgba(244,202,100,0.5);">ประตูดวงชะตา (VIP)</h2>
+      <p class="muted" style="margin-bottom: 30px; font-size: 1.05rem;">กรุณากรอกรหัสพรีเมียม เพื่อเปิดดวงชะตาและรับคำทำนาย</p>
+      
+      <div style="max-width: 400px; margin: 0 auto;">
+        <div class="input-wrap">
+          <input id="keyInput" type="text" placeholder="HORO-XXXX-XXXX" autocomplete="off" oninput="this.value = this.value.toUpperCase()" style="text-align: center; font-size: 1.3rem !important; letter-spacing: 2px; padding: 18px; font-weight: bold; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+        </div>
+        <button class="btn" id="loginBtn" style="margin-top:20px; width:100%; font-size: 1.2rem; padding: 16px; box-shadow: 0 8px 25px rgba(244,202,100,0.35);">✨ ปลดล็อกคำทำนาย</button>
+      </div>
+
+      <div style="margin: 40px auto; width: 80%; border-top: 1px dashed rgba(244,202,100,0.3); position: relative;">
+        <span style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #181126; padding: 0 16px; color: var(--gold2); font-size: 0.95rem; border-radius: 10px; border: 1px solid rgba(244,202,100,0.2);">หรือ สั่งซื้ออัตโนมัติ (รับ Key ทันที)</span>
+      </div>
+
+      <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 24px; max-width: 400px; margin: 0 auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.2);">
+        <h3 style="color: #34d399; margin-top: 0; font-size: 1.25rem;">💰 ซื้อรหัสเข้าดูดวง (ออโต้)</h3>
+        <p class="muted" style="font-size: 0.95rem; margin-bottom: 16px; line-height: 1.6;">สแกนชำระเงิน <strong id="uiSlipPrice" style="color:#fff; font-size:1.1rem;">69</strong> บาท และแนบสลิปเพื่อรับรหัสเข้าใช้งานได้ทันที</p>
+        
+        <div style="background: #fff; padding: 12px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <img id="promptpayQrImg" src="" alt="PromptPay QR Code" style="width: 160px; height: 160px; border-radius: 8px; display: block;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+           <span style="color:#a7f3d0; font-size:0.9rem;">พร้อมเพย์/เลขบัญชี:</span><br>
+           <strong id="uiPaymentAcc" style="color:#fff; font-size:1.2rem; letter-spacing: 1px;">0868679991</strong>
+           <button class="btn-action btn-copy" style="padding:4px 8px; margin-left:8px; border-radius: 8px; font-weight: bold; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; cursor:pointer;" onclick="navigator.clipboard.writeText(document.getElementById('uiPaymentAcc').innerText).then(()=>toast('คัดลอกเลขบัญชีแล้ว'))">📋 คัดลอก</button>
+        </div>
+
+        <input type="file" id="slipUploadInput" accept="image/*" class="hide">
+        <button class="btn" id="uploadSlipBtn" style="background: linear-gradient(135deg, #10b981, #059669); color: white; width:100%; font-size: 1.15rem; padding: 14px; box-shadow: 0 8px 25px rgba(16,185,129,0.35);" onclick="document.getElementById('slipUploadInput').click()">📤 แนบสลิปยืนยันการโอน</button>
+      </div>
+
+      <div style="margin: 40px auto; width: 80%; border-top: 1px dashed rgba(244,202,100,0.3); position: relative;">
+        <span style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #181126; padding: 0 16px; color: var(--gold2); font-size: 0.95rem; border-radius: 10px; border: 1px solid rgba(244,202,100,0.2);">หรือ</span>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(244,202,100,0.2); border-radius: 20px; padding: 24px; max-width: 400px; margin: 0 auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.3);">
+        <h3 style="color: #fff; margin-top: 0; font-size: 1.25rem;">ยังไม่มี Access Key?</h3>
+        <p class="muted" style="font-size: 0.95rem; margin-bottom: 20px; line-height: 1.6;">สแกน QR Code หรือกดปุ่มด้านล่าง เพื่อติดต่อ Admin ขอรับรหัสเปิดดวงชะตาพรีเมียม</p>
+        
+        <div style="background: #fff; padding: 12px; border-radius: 16px; display: inline-block; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <img 
+            src="https://drive.google.com/thumbnail?id=188n3ryLdZXWZUAUvEr0dh67inAw5t8Ee&sz=w400" 
+            alt="Line QR Code" 
+            style="width: 160px; height: 160px; border-radius: 8px; display: block;" 
+            onerror="this.style.display='none';"
+          >
+        </div>
+
+        <a id="lineContactBtn" href="https://line.me/ti/p/HctEkwu4dM" target="_blank" style="display: block; background: linear-gradient(135deg, #06C755, #05A344); color: #fff; text-decoration: none; padding: 16px; border-radius: 14px; font-weight: 800; font-size: 1.15rem; text-align: center; box-shadow: 0 6px 20px rgba(6,199,85,0.4); transition: 0.2s;">
+            เพิ่มเพื่อนผ่าน LINE
+        </a>
+      </div>
+    </div>
+
+    <div id="userView" class="hide grid two">
+      <div class="card section">
+        <h2 class="h2">ข้อมูลเจ้าชะตา</h2>
+        <label>ชื่อ-นามสกุล</label>
+        <input id="nameInput" placeholder="กรอกชื่อของคุณ">
+        
+        <div class="row">
+          <div>
+            <label>วันที่เกิด</label>
+            <input id="birthDay" type="number" placeholder="1" min="1" max="31" oninput="if(this.value.length > 2) this.value = this.value.slice(0,2);">
+          </div>
+          <div>
+            <label>เดือนเกิด</label>
+            <input id="birthMonth" type="number" placeholder="1" min="1" max="12" oninput="if(this.value.length > 2) this.value = this.value.slice(0,2);">
+          </div>
+        </div>
+        
+        <label>ปีเกิด (พ.ศ.)</label>
+        <input id="birthYear" type="number" placeholder="2535" oninput="if(this.value.length > 4) this.value = this.value.slice(0,4);">
+        
+        <label>เวลาเกิด (แบบ 24 ชั่วโมง เช่น 15:30)</label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <select id="birthHour" style="flex: 1;"><option value="">-- ชั่วโมง --</option></select>
+          <span style="color: var(--gold2); font-weight: bold; font-size: 1.2rem;">:</span>
+          <select id="birthMinute" style="flex: 1;"><option value="">-- นาที --</option></select>
+        </div>
+        
+        <label>เบอร์โทรศัพท์ (ไม่บังคับ)</label>
+        <input id="phoneNumber" type="tel" inputmode="numeric" placeholder="0812345678" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 10) this.value = this.value.slice(0,10);">
+        
+        <label>ทะเบียนรถ (ไม่บังคับ)</label>
+        <input id="vehiclePlate" placeholder="1กข 1234">
+        
+        <label>อีเมล (E-Mail) (ไม่บังคับ)</label>
+        <input id="userEmailForm" type="email" placeholder="กรอกเพื่อรับสำเนาผลคำทำนายทางอีเมลอัตโนมัติ">
+      </div>
+
+      <div class="card section">
+        <h2 class="h2">คำแนะนำก่อนทำนาย</h2>
+        <div class="muted" style="line-height: 1.6;">กรุณาตั้งสมาธิ และกรอกข้อมูลของท่านให้ถูกต้องที่สุด เพื่อให้โหราจารย์คำนวณพื้นดวงและดาวจรได้อย่างแม่นยำตามหลักตำราพรหมชาติ หากระบุเวลาเกิดระบบจะคำนวณข้างขึ้นข้างแรมและลัคนาให้แม่นยำที่สุด</div>
+        <button class="btn" id="generateBtn" style="margin-top:32px; width:100%; padding: 16px; font-size: 1.15rem; box-shadow: 0 8px 25px rgba(244,202,100,0.35);">✨ รับคำทำนาย</button>
+      </div>
+    </div>
+
+    <div id="sessionInfo" class="hide info-bar" style="align-items: center; justify-content: space-between;">
+      <div style="flex: 1; min-width: 250px;">
+        <div style="margin-bottom: 10px; font-size: 1.05rem;">⏳ เวลาในระบบ: <strong id="timeRemainTxt" class="text-gold">คำนวณเวลา...</strong></div>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.85rem;">
+           <div onclick="document.getElementById('chatView').scrollIntoView({behavior: 'smooth', block: 'start'})" style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+             💬 ปรึกษา: <strong id="qRemainTxt" class="text-lucky">...</strong>
+           </div>
+           
+           <div id="templeQuotaBadge" onclick="document.getElementById('manualTempleCard').scrollIntoView({behavior: 'smooth', block: 'start'})" style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+             ⛩️ หาวัด: <strong id="templeRemainTxt" class="text-lucky">2</strong>
+           </div>
+           
+           <div onclick="document.getElementById('seamsiCard').scrollIntoView({behavior: 'smooth', block: 'start'})" style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+             🔮 เซียมซี: <strong id="seamsiRemainTxt" class="text-lucky">1</strong>
+           </div>
+           
+           <div onclick="document.getElementById('tarotCard').scrollIntoView({behavior: 'smooth', block: 'start'})" style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+             🃏 ไพ่ยิปซี: <strong id="tarotRemainTxt" class="text-lucky">1</strong>
+           </div>
+           
+           <div id="faceScanQuotaBadge" onclick="document.getElementById('faceScanCard').scrollIntoView({behavior: 'smooth', block: 'start'})" class="hide" style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+             👤 โหงวเฮ้ง: <strong id="faceScanRemainTxt" class="text-lucky">1</strong>
+           </div>
+        </div>
+      </div>
+      <button class="btn2" id="logoutBtn" style="color: #f87171; border-color: #f87171; white-space: nowrap; margin-top: 0; align-self: flex-start;" onclick="triggerLogoutAction()">🚪 ออกจากระบบ</button>
+    </div>
+
+    <div id="resultView" class="hide grid" style="margin-top:16px">
+      <div id="readOnlyBanner" class="hide readonly-banner"></div>
+
+      <div class="card section">
+        <div class="result-top" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+          <h2 class="h2" id="resultTitle" style="margin:0;">ผลคำทำนาย</h2>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn2" id="backBtn">กลับไปแก้ข้อมูล</button>
+            <button class="btn2" id="pdfBtn">🖨️ สั่งพิมพ์ใบดวงชะตา</button>
+            <button class="btn2" id="downloadPdfBtn" style="color: #60a5fa; border-color: #60a5fa;">📥 โหลดเป็น PDF</button>
+            <button class="btn" id="openEmailModalBtn" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none;">📧 ส่งผลเข้าอีเมล</button>
+            <button class="btn" id="createWallpaperBtn" style="background: linear-gradient(135deg, var(--gold), #d8a82b); color: #1b102a; border: none;">📱 รับวอลเปเปอร์หนุนดวง VIP</button>
+          </div>
+        </div>
+        <div id="summaryBlock" style="margin-top: 16px;"></div>
+      </div>
+
+      <div class="card section" id="autoTempleCard">
+        <h2 class="h2">🙏 สถานที่ทำบุญและอัปเดตงานบุญ (แนะนำจากระบบ)</h2>
+        <div id="autoTempleBlock"></div>
+      </div>
+
+      <div class="card section" id="manualTempleCard">
+        <h2 class="h2">🔍 ค้นหาวัดตามจังหวัด (สิทธิ์พิเศษ)</h2>
+        <div id="templeInputBox">
+          <p class="muted" style="line-height:1.6;">หากท่านต้องการค้นหาวัดในจังหวัดที่ท่านอยู่หรือตั้งใจจะไป <strong id="templeQuotaTxt" class="text-lucky">(เหลือสิทธิ์ 2 ครั้ง)</strong></p>
+          <input id="templeProvince" placeholder="พิมพ์ชื่อจังหวัด เช่น กรุงเทพมหานคร, เชียงใหม่" style="margin-top:10px; margin-bottom:12px;">
+          <button class="btn" id="findTempleBtn" style="width:100%;">🔍 ค้นหาวัดและงานบุญ</button>
+        </div>
+        <div id="templeResultBox" class="hide">
+          <div id="templeResultContent"></div>
+          <button class="btn2" id="resetTempleBtn" style="margin-top:16px; width:100%;" onclick="resetTemple()">ค้นหาจังหวัดอื่น</button>
+        </div>
+      </div>
+      
+      <div class="card section">
+        <h2 class="h2" style="text-align: center;">🎨 ศาสตร์แห่งสีมงคล</h2>
+        <div id="luckyBlock"></div>
+        <div id="colorBlock" style="margin-top: 24px;"></div>
+      </div>
+
+      <div class="card section">
+        <h2 class="h2 text-gold" style="text-align: center;">💰 แนวทางเลขเด็ดพารวย</h2>
+        <div id="numberBlock"></div>
+      </div>
+      
+      <div class="card section" id="seamsiCard">
+        <h2 class="h2">🔮 เสี่ยงเซียมซีพยากรณ์หนุนดวง (สิทธิ์พรีเมียม)</h2>
+        <div class="premium-container">
+          <div id="seamsiActionBox">
+            <div class="seamsi-wrapper" id="seamsiShakeBtn" onclick="shakeSeamsi()">
+              <div class="seamsi-stick" id="seamsiStick"></div>
+              <div class="seamsi-cylinder">🎋</div>
+            </div>
+            <p style="margin-top:20px; color:var(--gold2); font-weight:bold;">คลิกที่กระบอกติ้วเพื่อเขย่าเสี่ยงเซียมซี (จำกัด 1 สิทธิ์)</p>
+          </div>
+          <div id="seamsiResultBox" class="hide"></div>
+        </div>
+      </div>
+
+      <div class="card section" id="tarotCard">
+        <h2 class="h2">🃏 เปิดไพ่ยิปซี 3 ใบ (อดีต - ปัจจุบัน - อนาคต)</h2>
+        <div class="premium-container" style="border-color: #a78bfa;">
+          <div id="tarotActionBox">
+            <div class="tarot-deck" id="tarotDrawBtn" onclick="drawTarotCard()">🎴🎴🎴</div>
+            <p style="margin-top:20px; color:#a78bfa; font-weight:bold;">คลิกเพื่อสุ่มเปิดไพ่ยิปซี 3 ใบ (จำกัด 1 สิทธิ์)</p>
+          </div>
+          <div id="tarotResultBox" class="hide"></div>
+        </div>
+      </div>
+
+      <div class="card section hide" id="faceScanCard">
+        <h2 class="h2" style="color: #0ea5e9;">👤 วิเคราะห์โหงวเฮ้งด้วย AI (Face Reading)</h2>
+        <div class="premium-container" style="border-color: #0ea5e9;">
+          <div id="faceScanActionBox">
+            <p class="muted" style="margin-top:0;">ให้ AI อ่านเค้าโครงใบหน้า หน้าผาก คิ้ว ตา จมูก ปาก ตามหลักตำราจีนโบราณ เพื่อทำนายพื้นดวง ทรัพย์สิน และหน้าที่การงาน</p>
+            <div id="cameraSetupBox">
+               <button class="btn" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; width:100%; box-shadow: 0 6px 15px rgba(14,165,233,0.3);" onclick="startCamera()">📷 เปิดกล้องสแกนใบหน้า (1 สิทธิ์)</button>
+               <p style="font-size:0.8rem; color:#f87171; margin-top:10px;">* โปรดถอดแว่นตาและหันหน้าตรง เพื่อความแม่นยำ</p>
+            </div>
+            <input type="file" id="cameraInput" accept="image/*" capture="user" class="hide" onchange="handleCameraUpload(event)">
+
+            <div id="cameraActiveBox" class="hide">
+               <div class="camera-container">
+                  <img id="cameraPreview" alt="Face Preview">
+                  <div class="camera-overlay"></div>
+               </div>
+               <p style="color:#0ea5e9; font-weight:bold; margin: 16px 0;">ภาพใบหน้าชัดเจนดีหรือไม่? กดวิเคราะห์ได้เลยครับ</p>
+               <div style="display:flex; gap:10px; justify-content:center;">
+                  <button class="btn2" style="border-color:#f87171; color:#f87171; width:120px;" onclick="stopCamera()">ถ่ายใหม่</button>
+                  <button class="btn" style="background: #0ea5e9; color: #fff;" onclick="captureAndAnalyzeFace()">✨ สแกนใบหน้า</button>
+               </div>
+               <canvas id="cameraCanvas" class="hide"></canvas>
+            </div>
+            
+            <div id="faceScanningBox" class="hide">
+               <div class="camera-container cyber-scanner">
+                  <img id="scanningImage" alt="Scanning Face" style="filter: brightness(1.2) contrast(1.1) grayscale(0.2);">
+                  <div class="scanner-grid"></div>
+                  <div class="scanner-laser"></div>
+                  <div class="scan-corners"><span></span></div>
+                  <div class="hud-text" id="hudProgressText">ANALYZING FACIAL STRUCTURE...</div>
+               </div>
+               <p style="color:#34d399; font-weight:bold; margin-top: 20px; animation: blinkText 1s infinite alternate;" id="scanStatusThai">กำลังเชื่อมต่อฐานข้อมูลโหราศาสตร์...</p>
+            </div>
+          </div>
+          <div id="faceScanResultBox" class="hide"></div>
+        </div>
+      </div>
+    </div> 
+    
+    <div id="chatView" class="hide card section" style="margin-top:16px">
+      <div class="chat-header-flex">
+        <div>
+           <h2 class="h2" style="margin:0;">ปรึกษาโหราจารย์เพิ่มเติม</h2>
+           <div class="muted" style="font-size:0.9rem; margin-top:4px;">เหลือโควตาถามได้อีก <strong id="qRemainChat" class="text-warning">...</strong> ครั้ง</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+           <button class="btn2" id="pdfChatBtn">🖨️ สั่งพิมพ์การสนทนา</button>
+           <button class="btn2" id="downloadChatPdfBtn" style="color: #60a5fa; border-color: #60a5fa;">📥 โหลดแชทเป็น PDF</button>
+           <button class="btn" id="openEmailModalBtnChat" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none;">📧 ส่งผลเข้าอีเมล</button>
+           <button class="btn" id="createWallpaperBtnChat" style="background: linear-gradient(135deg, var(--gold), #d8a82b); color: #1b102a; border: none;">📱 รับวอลเปเปอร์หนุนดวง VIP</button>
+        </div>
+      </div>
+
+      <div id="chatMessages" class="chat" style="max-height:400px; overflow:auto; margin-bottom:12px; padding-right: 8px;"></div>
+      
+      <div id="chatStatusBar" class="chat-status">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+        <div id="chatStatusText" style="color: var(--gold2); font-weight: bold; font-size: 0.95rem;">อาจารย์กำลังพิจารณาดวงและพิมพ์คำตอบ...</div>
+      </div>
+
+      <div class="composer">
+        <button class="btn2" id="voiceBtn" onclick="startVoiceRecognition()" style="padding: 12px; margin-right: 4px;" title="พูดแทนพิมพ์ (รองรับเฉพาะบางเบราว์เซอร์)">🎙️ พูด</button>
+        <textarea id="chatInput" rows="2" placeholder="พิมพ์คำถาม..."></textarea>
+        <button class="btn" id="sendChatBtn">ส่งคำถาม</button>
+      </div>
+    </div> 
+    
+    <div id="productsView" class="hide card section" style="margin-top:16px">
+      <h2 class="h2">วัตถุมงคลแนะนำ (หนุนดวงชะตานี้โดยเฉพาะ 5 รายการ)</h2>
+      <div id="productsBlock" class="cards"></div>
+    </div>
+
+    <div id="ratingView" class="hide card section rating-container" style="margin-top:16px;">
+         <h2 class="h2" style="margin:0; text-align:center;">🎯 คำทำนายภาพรวมแม่นยำแค่ไหน?</h2>
+         <p class="muted" style="margin-top:6px; text-align:center;">ช่วยประเมินความพึงพอใจ เพื่อเป็นกำลังใจให้โหราจารย์และทีมงานครับ</p>
+         <div class="stars" id="starGroup">
+            <span class="star" data-value="5">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="1">★</span>
+         </div>
+         <div id="ratingThanks" class="rating-submitted" style="text-align:center;">✅ ขอบคุณสำหรับคะแนนประเมินครับ!</div>
+    </div>
+
+    <div id="bottomLogoutContainer" class="hide" style="margin-top: 20px; text-align: center;">
+      <button class="btn2" style="color: #f87171; border-color: #f87171; width: 100%; max-width: 400px; padding: 14px;" onclick="triggerLogoutAction()">🚪 ออกจากระบบปลอดภัย</button>
+    </div>
+  </div> 
+
+  <script>
+     // ============================================================================
+    // เพิ่มใหม่: Proxy จำลองคำสั่ง google.script.run ให้ทำงานข้ามโดเมนได้ (สำหรับ GitHub Pages)
+    // ============================================================================
+     // ============================================================================
+    // แก้ไขใหม่ล่าสุด: Proxy จำลองคำสั่ง google.script.run แบบแยก Instance (ป้องกัน Callback ตีกัน)
+    // ============================================================================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzdsjLE2Dj4-lRE8izW9DfK7Sy40QWpg92lou96memlzDNGMatX1qmHEDDk74MXv63pPg/exec";
+
+    const google = {
+      script: {
+        get run() {
+          // สร้างหน่วยความจำใหม่ทุกครั้งที่มีการกดปุ่ม (แยกสายการทำงานชัดเจน)
+          return createRunner({});
+        }
+      }
+    };
+
+    function createRunner(handlers) {
+      return new Proxy({}, {
+        get: function(target, prop) {
+          if (prop === 'withSuccessHandler') {
+            return function(callback) {
+              handlers.success = callback;
+              return createRunner(handlers); // คืนค่า runner ตัวเดิมที่จำเฉพาะ callback ของตัวเอง
+            };
+          }
+          if (prop === 'withFailureHandler') {
+            return function(callback) {
+              handlers.failure = callback;
+              return createRunner(handlers);
+            };
+          }
+          // เมื่อเรียกใช้งานฟังก์ชันหลังบ้าน (เช่น generateHoroscope, syncUserTimer)
+          return async function(...args) {
+            try {
+              const res = await fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: prop, args: args })
+              });
+              
+              const text = await res.text();
+              let json;
+              try {
+                json = JSON.parse(text);
+              } catch (e) {
+                console.error("Server Error Response:", text);
+                if (handlers.failure) handlers.failure("เซิร์ฟเวอร์ตอบกลับผิดพลาด (อาจเกิดจากการโหลดหนัก หรือ Google ล่ม)");
+                return;
+              }
+
+              if (json.ok) {
+                if (handlers.success) handlers.success(json.data);
+              } else {
+                if (handlers.failure) handlers.failure(json.error);
+              }
+            } catch (err) {
+              console.error("Fetch Error:", err);
+              // ดักจับกรณีเน็ตมือถือหลุด หรือ API หมดเวลา
+              if (handlers.failure) handlers.failure("การเชื่อมต่อขาดหาย (ตรวจสอบอินเทอร์เน็ต หรือเซิร์ฟเวอร์ตอบสนองช้าเกินไป)");
+            }
+          };
+        }
+      });
+    }
+    
+    
+    // โค้ดเดิมของคุณทั้งหมดจะอยู่ต่อจากบรรทัดนี้...
+
+    
+    let uniqueClientId = localStorage.getItem('horo_client_id');
+    if (!uniqueClientId) {
+      uniqueClientId = 'SSID-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('horo_client_id', uniqueClientId);
+    }
+
+    let appState = { loggedIn: false, keyCode: '', reading: null, chat: [], keyInfo: null, seamsiUsed: false, tarotUsed: false };
+    let lastPayloadStr = ""; 
+    let countdownInterval = null; 
+    let autoSaveInterval = null; 
+    let templeSearchCount = 0;
+
+    const templeImages = [
+      'https://images.unsplash.com/photo-1598970434795-0c54fd7c0d2d?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1563492065599-3520f775eeed?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1540611025311-01df3cef54b5?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1600024520638-a28a3dfc7857?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1580975615712-421cc67d4cc8?q=80&w=500&auto=format&fit=crop'
+    ];
+
+    const tarotImages = {
+      'the_fool': '9/90/RWS_Tarot_00_Fool.jpg', 'the_magician': 'd/de/RWS_Tarot_01_Magician.jpg', 'the_high_priestess': '8/88/RWS_Tarot_02_High_Priestess.jpg',
+      'the_empress': 'd/d2/RWS_Tarot_03_Empress.jpg', 'the_emperor': 'c/c3/RWS_Tarot_04_Emperor.jpg', 'the_hierophant': '8/8d/RWS_Tarot_05_Hierophant.jpg',
+      'the_lovers': '3/3a/RWS_Tarot_06_Lovers.jpg', 'the_chariot': '9/9b/RWS_Tarot_07_Chariot.jpg', 'strength': 'f/f5/RWS_Tarot_08_Strength.jpg',
+      'the_hermit': '4/4d/RWS_Tarot_09_Hermit.jpg', 'wheel_of_fortune': '3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg', 'justice': 'e/e0/RWS_Tarot_11_Justice.jpg',
+      'the_hanged_man': 'a/a3/RWS_Tarot_12_Hanged_Man.jpg', 'death': 'd/d7/RWS_Tarot_13_Death.jpg', 'temperance': 'f/f8/RWS_Tarot_14_Temperance.jpg',
+      'the_devil': '5/55/RWS_Tarot_15_Devil.jpg', 'the_tower': '5/53/RWS_Tarot_16_Tower.jpg', 'the_star': 'd/db/RWS_Tarot_17_Star.jpg',
+      'the_moon': '7/7f/RWS_Tarot_18_Moon.jpg', 'the_sun': '1/17/RWS_Tarot_19_Sun.jpg', 'judgement': 'd/dd/RWS_Tarot_20_Judgment.jpg',
+      'the_world': 'f/ff/RWS_Tarot_21_World.jpg'
+    };
+
+    const getEl = (id) => document.getElementById(id);
+    
+    // ============================================================================
+    // [เพิ่มใหม่]: ฟังก์ชันคำนวณโค้ด PromptPay QR (ทำงานในเครื่อง ไม่พึ่งเว็บภายนอก)
+    // ============================================================================
+    function generatePromptPayPayload(acc, amount) {
+        let accClean = String(acc).replace(/[^0-9]/g, '');
+        // เช็คว่าเป็นเบอร์โทร (10 หลัก) หรือ บัตรประชาชน/เลขนิติบุคคล (13-15 หลัก)
+        let target = accClean.length === 10 ? '01130066' + accClean.substring(1) : '0213' + accClean; 
+        let amountStr = Number(amount).toFixed(2);
+        let payload = `00020101021129370016A000000677010111${target}5802TH530376454${String(amountStr.length).padStart(2, '0')}${amountStr}6304`;
+        
+        // คำนวณรหัสตรวจสอบความถูกต้อง (CRC16)
+        let crc = 0xFFFF;
+        for (let i = 0; i < payload.length; i++) {
+            crc ^= payload.charCodeAt(i) << 8;
+            for (let j = 0; j < 8; j++) {
+                crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+            }
+        }
+        return payload + (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. ตรวจสอบและดึงค่า Key จาก URL (ถ้ามี)
+      const urlParams = new URLSearchParams(window.location.search);
+      const autoKey = urlParams.get('key');
+      if (autoKey && getEl('keyInput')) {
+          getEl('keyInput').value = autoKey.toUpperCase();
+      }
+
+      // 2. สร้างตัวเลือกเวลาเกิด (ชั่วโมงและนาที)
+      const hSel = getEl('birthHour'), mSel = getEl('birthMinute');
+      if (hSel && mSel) {
+        for(let i = 0; i < 24; i++) hSel.innerHTML += `<option value="${String(i).padStart(2,'0')}">${String(i).padStart(2,'0')}</option>`;
+        for(let i = 0; i < 60; i++) mSel.innerHTML += `<option value="${String(i).padStart(2,'0')}">${String(i).padStart(2,'0')}</option>`;
+      }
+      
+      // 3. ดึงการตั้งค่าระบบจากหลังบ้าน (Google Apps Script)
+      google.script.run.withSuccessHandler((settings) => {
+         // --- จัดการโหมดปิดปรับปรุงระบบ ---
+         if (settings && String(settings.MAINTENANCE_MODE).toLowerCase() === 'true') {
+            document.querySelector('.wrap').innerHTML = `
+              <div style="text-align:center; padding: 60px 20px; margin-top: 50px; background: rgba(0,0,0,0.5); border-radius: 24px; border: 1px solid rgba(244,202,100,0.3); backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                <div style="font-size: 6rem; margin-bottom: 20px; animation: pulse 2s infinite;">🛠️</div>
+                <h1 style="color:var(--gold2); font-size: 2.2rem; margin-bottom: 15px;">ระบบกำลังปิดปรับปรุงชั่วคราว</h1>
+                <p class="muted" style="font-size: 1.15rem; line-height: 1.6;">ขออภัยในความไม่สะดวกครับ โหราจารย์กำลังตั้งจิตปรับกระแสญาณให้แม่นยำยิ่งขึ้น<br><br><b>กรุณากลับมาใช้งานใหม่ในภายหลังครับ 🙏</b></p>
+              </div>`;
+            return; 
+         } 
+         
+         if (settings) {
+             // --- จัดการแถบประกาศ ---
+             if (settings.ANNOUNCEMENT_TEXT && String(settings.ANNOUNCEMENT_TEXT).trim() !== '') {
+                const banner = document.getElementById('announcementBanner');
+                if (banner) {
+                    banner.innerHTML = '📢 ' + settings.ANNOUNCEMENT_TEXT;
+                    banner.classList.remove('hide');
+                }
+             }
+
+             // --- จัดการลิงก์ติดต่อ Admin ---
+             if (settings.ADMIN_LINE_URL) {
+                const lineBtn = document.getElementById('lineContactBtn');
+                if (lineBtn) lineBtn.href = settings.ADMIN_LINE_URL;
+             }
+
+             // --- จัดการระบบสแกนโหงวเฮ้ง ---
+             if (settings.FACE_SCAN_ENABLED !== undefined) {
+                 appState.isFaceScanEnabled = String(settings.FACE_SCAN_ENABLED).toLowerCase() !== 'false';
+             } else {
+                 appState.isFaceScanEnabled = true;
+             }
+             
+             // --- จัดการแสดงราคาและ QR Code (อัปเดตใช้ Promptpay.io) ---
+             const price = settings.SLIP_PRICE || '69'; 
+             const acc = settings.PAYMENT_ACCOUNT || '0868679991'; 
+             
+             const uiPriceEl = document.getElementById('uiSlipPrice');
+             if (uiPriceEl) uiPriceEl.innerText = price;
+             
+             const uiAccEl = document.getElementById('uiPaymentAcc');
+             if (uiAccEl) uiAccEl.innerText = acc;
+             
+             // ใช้ API ของ Promptpay.io ที่เสถียรที่สุดสำหรับสร้าง QR Code พร้อมเพย์ไทย
+             const qrUrl = `https://promptpay.io/${acc}/${price}.png`;
+             const qrImgEl = document.getElementById('promptpayQrImg');
+             if (qrImgEl) qrImgEl.src = qrUrl;
+         }
+      }).getPublicSettings();
+    });
+
+    // [เพิ่มใหม่]: สคริปต์จัดการอัปโหลดสลิปที่เคยหายไป
+    document.getElementById('slipUploadInput').addEventListener('change', function(e) {
+       const file = e.target.files[0];
+       if (!file) return;
+
+       showLoading('กำลังสแกนตรวจสอบสลิปโอนเงิน...', 'ระบบ AI ตรวจสอบอัตโนมัติ (ใช้เวลา 2-3 วินาที)');
+       
+       const reader = new FileReader();
+       reader.onload = function(event) {
+          const img = new Image();
+          img.onload = function() {
+             const canvas = document.createElement('canvas');
+             const ctx = canvas.getContext('2d');
+             const MAX_WIDTH = 800;
+             let width = img.width, height = img.height;
+             
+             if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width);
+                width = MAX_WIDTH;
+             }
+             canvas.width = width; canvas.height = height;
+             ctx.drawImage(img, 0, 0, width, height);
+             const base64Slip = canvas.toDataURL('image/jpeg', 0.8);
+
+             google.script.run.withSuccessHandler((res) => {
+                hideLoading();
+                document.getElementById('slipUploadInput').value = ''; 
+                
+                if (res && res.ok && res.keyCode) {
+                   toast('✅ ยืนยันสลิปสำเร็จ! กำลังพาท่านเข้าสู่ระบบ...', false, true);
+                   document.getElementById('keyInput').value = res.keyCode;
+                   setTimeout(() => { document.getElementById('loginBtn').click(); }, 1500);
+                }
+             }).withFailureHandler((err) => {
+                hideLoading();
+                document.getElementById('slipUploadInput').value = '';
+                document.getElementById('alertTitle').innerHTML = '⚠️ แจ้งเตือนการตรวจสอบสลิป';
+                document.getElementById('alertBody').innerHTML = `<div style="color:#f87171;">${err.message || err}</div>`;
+                document.getElementById('alertModal').classList.add('show');
+             }).processSlipUpload({ imageBase64: base64Slip });
+          };
+          img.src = event.target.result;
+       };
+       reader.readAsDataURL(file);
+    });
+    
+    const show = (id) => {
+      ['loginView','userView','resultView','chatView','productsView','ratingView'].forEach(v => { getEl(v).classList.add('hide'); });
+      if (id === 'resultView') {
+        getEl('resultView').classList.remove('hide');
+        if (appState.keyInfo && appState.keyInfo.isReadOnly) {
+            getEl('chatView').classList.remove('hide'); 
+            getEl('productsView').classList.remove('hide'); 
+            getEl('readOnlyBanner').classList.remove('hide');
+            if(appState.keyInfo.expireDateStr) {
+                getEl('readOnlyBanner').innerHTML = `⚠️ โควตาการถาม/เวลา ของคุณหมดแล้ว แต่คุณสามารถดูประวัติคำทำนายย้อนหลังและสั่งพิมพ์ได้ (จนถึงวันที่ ${appState.keyInfo.expireDateStr})`;
+            }
+            getEl('backBtn').classList.add('hide');
+            getEl('sessionInfo').classList.add('hide');
+            getEl('seamsiActionBox').classList.add('hide');
+            getEl('tarotActionBox').classList.add('hide');
+            getEl('templeInputBox').classList.add('hide');
+            document.querySelector('.composer').classList.add('hide'); 
+        } else {
+            getEl('chatView').classList.remove('hide');
+            getEl('productsView').classList.remove('hide');
+            getEl('readOnlyBanner').classList.add('hide');
+            getEl('sessionInfo').classList.remove('hide'); 
+            getEl('manualTempleCard').classList.remove('hide');
+            getEl('seamsiCard').classList.remove('hide');
+            getEl('tarotCard').classList.remove('hide');
+            getEl('backBtn').classList.remove('hide');
+            document.querySelector('.composer').classList.remove('hide');
+        }
+        getEl('ratingView').classList.remove('hide'); 
+        getEl('bottomLogoutContainer').classList.remove('hide');
+      } else {
+        getEl(id).classList.remove('hide');
+      }
+      if (id === 'loginView' || id === 'userView') {
+        getEl('sessionInfo').classList.add('hide');
+        getEl('bottomLogoutContainer').classList.add('hide');
+      }
+    };
+
+    function renderProducts(products) {
+      let prodHtml = '';
+      if (products && products.length > 0) {
+        for(let i=0; i<products.length; i++){
+          let p = products[i];
+          let imgHtml = '';
+          if (p.productImageUrl && p.productImageUrl.trim() !== '') {
+             let finalImgUrl = p.productImageUrl.trim();
+             const driveRegex = /drive\.google\.com\/file\/d\/([-_A-Za-z0-9]+)/;
+             const match = finalImgUrl.match(driveRegex);
+             if (match && match[1]) finalImgUrl = 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w800';
+             imgHtml = '<img src="' + finalImgUrl + '" alt="' + (p.productName || 'สินค้ามงคล') + '" style="width: 100%; height: 160px; object-fit: contain; background-color: rgba(0,0,0,0.3); padding: 8px; border-radius: 12px; margin-top: 14px; border: 1px solid rgba(255,255,255,0.1); display: block; box-sizing: border-box;" onerror="this.style.display=\'none\';">';
+          }
+
+          let badgeHtml = '';
+          if (p.source === 'chat') {
+             badgeHtml = '<div class="badge" style="color: #f87171; border-color: rgba(248, 113, 113, 0.4); background: rgba(248, 113, 113, 0.1);">💬 แก้เคล็ดจากความกังวล</div>';
+          } else {
+             badgeHtml = '<div class="badge">🔮 เสริมดวงชะตานี้</div>';
+          }
+
+          prodHtml += '<div class="product" style="cursor:pointer; display: flex; flex-direction: column; justify-content: space-between; animation: fadeIn 0.5s ease;" onclick="trackAndRedirect(\'' + (p.id || '') + '\', \'' + (p.productUrl || '') + '\')">';
+          prodHtml += '<div>' + badgeHtml + imgHtml + '<h3 style="margin-top: 14px; margin-bottom: 8px;">' + (p.productName || '') + '</h3><p class="muted" style="margin-top: 0; line-height: 1.5;">' + (p.reason || '') + '</p></div>';
+          prodHtml += '<div style="margin-top: 16px; text-align: center;"><span style="display: block; background: linear-gradient(135deg, rgba(244,202,100,0.15), rgba(244,202,100,0.05)); border: 1px solid var(--gold); color: var(--gold2); padding: 8px 0; border-radius: 10px; font-weight: 700; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">🛒 คลิกเพื่อดูรายละเอียด / บูชา</span></div></div>';
+        }
+      } else {
+        prodHtml = '<div class="muted">ยังไม่มีสินค้าแนะนำ</div>';
+      }
+      getEl('productsBlock').innerHTML = prodHtml;
+    }
+    
+    function setChatStatus(text, mode='idle'){ getEl('chatStatusText').textContent = text; if(mode !== 'idle') getEl('chatStatusBar').classList.add('show'); else getEl('chatStatusBar').classList.remove('show'); }
+    const showLoading = (msg='กำลังประมวลผล...', sub='') => { getEl('loadingText').textContent = msg; if(getEl('loadingSub')) getEl('loadingSub').innerHTML = sub; getEl('loadingOverlay').classList.add('show'); };
+    const hideLoading = () => getEl('loadingOverlay').classList.remove('show');
+
+    function toast(msg, isError = false, sticky = false) {
+      if (isError) {
+        getEl('alertBody').innerHTML = msg; getEl('alertModal').classList.add('show'); return;
+      }
+      const t = getEl('toast');
+      const closeBtn = sticky ? '<span onclick="document.getElementById(\'toast\').classList.remove(\'show\')" style="float:right; cursor:pointer; margin-left:15px; font-weight:bold; color:#fff;">✕</span>' : '';
+      t.innerHTML = msg + closeBtn; t.style.borderColor = '#34d399'; t.classList.add('show');
+      if (window.toastTimer) clearTimeout(window.toastTimer);
+      if (!sticky) window.toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+    }
+
+    function setStep(step){ ['Login','Read','Chat','Pdf'].forEach((s,i) => { if(i===step) getEl('step'+s).classList.add('active'); else getEl('step'+s).classList.remove('active'); }); }
+    
+    function formatHighlightText(text) {
+      if (!text) return '';
+      let processedText = String(text);
+      try {
+        if (processedText.trim().startsWith('{') && processedText.includes('"answer"')) {
+            let jsonObj = JSON.parse(processedText);
+            processedText = jsonObj.answer || '';
+            if (jsonObj.nextAdvice) {
+                processedText += '\n\n**คำแนะนำเพิ่มเติม:**\n' + jsonObj.nextAdvice;
+            }
+        }
+      } catch(e) {} 
+      
+      let cleanText = processedText
+        .replace(/\\n/g, '\n') 
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/\r\n/g, '\n')
+        .replace(/\[color:[^\]]+\](.*?)\[\/color\]/gi, '<span class="text-gold" style="font-weight:700;">$1</span>')
+        .replace(/\[nationwideTemples\](.*?)\[\/nationwideTemples\]/gi, '<span class="text-lucky" style="font-weight:700;">⛩️ $1</span>')
+        .replace(/\[GOOD\]([\s\S]*?)\[\/GOOD\]/gi, '<span class="text-lucky">$1</span>')
+        .replace(/\[BAD\]([\s\S]*?)\[\/BAD\]/gi, '<span class="text-warning">$1</span>')
+        .replace(/\*\*(.*?)\*\*/g, '<span class="text-gold" style="font-weight:700;">$1</span>');
+      
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      cleanText = cleanText.replace(urlRegex, function(url) {
+        let cleanUrl = url.replace(/['".),\]]+$/, '');
+        return '<a href="' + cleanUrl + '" target="_blank" style="color: #60a5fa; text-decoration: underline; word-break: break-all;">' + cleanUrl + '</a>' + url.slice(cleanUrl.length);
+      });
+      
+      cleanText = cleanText.replace(/\[GOOD\]/gi, '<span class="text-lucky">').replace(/\[\/GOOD\]/gi, '</span>');
+      cleanText = cleanText.replace(/\[BAD\]/gi, '<span class="text-warning">').replace(/\[\/BAD\]/gi, '</span>');
+      
+      let paragraphs = cleanText.replace(/\n{2,}/g, '\n\n').trim().split('\n\n');
+      let out = '';
+      for(let i = 0; i < paragraphs.length; i++){
+        let line = paragraphs[i].trim();
+        if(!line) continue;
+        line = line.replace(/\n/g, '<br>');
+        out += '<p style="line-height:1.8; margin-bottom:12px; text-indent: 20px;">' + line + '</p>';
+      }
+      return out;
+    }
+    
+    getEl('backBtn').onclick = () => show('userView');
+
+    function startTimer(seconds) {
+      clearInterval(countdownInterval); if(autoSaveInterval) clearInterval(autoSaveInterval);
+      let t = seconds;
+      countdownInterval = setInterval(() => {
+        if(t <= 0) { 
+          clearInterval(countdownInterval); if(autoSaveInterval) clearInterval(autoSaveInterval);
+          getEl('timeRemainTxt').textContent = "หมดเวลาใช้งาน"; getEl('timeRemainTxt').className = "text-warning";
+          getEl('sendChatBtn').disabled = true; getEl('chatInput').disabled = true;
+          
+          if (appState.customerEmail) {
+             toast('เวลาใช้งานหมดแล้ว! ระบบกำลังจัดส่งผลคำทำนายเข้าอีเมลให้คุณ...', false, true);
+             google.script.run.sendFullReportEmail({ keyCode: appState.keyCode, email: appState.customerEmail });
+          }
+
+          google.script.run.syncUserTimer(appState.keyCode, 0, true, uniqueClientId);
+          toast("เวลาการใช้งานของคุณหมดแล้วครับ", true);
+          return; 
+        }
+        t--; appState.keyInfo.remainingSeconds = t;
+        let h = Math.floor(t / 3600); let m = Math.floor((t % 3600) / 60); let s = t % 60;
+        getEl('timeRemainTxt').textContent = h + ' ชม. ' + m + ' นาที ' + s + ' วินาที';
+      }, 1000);
+
+      autoSaveInterval = setInterval(() => {
+        if(appState.keyCode && t > 0) {
+           google.script.run.withSuccessHandler((res) => {
+               if (res && res.kickedOut) {
+                   clearInterval(countdownInterval);
+                   clearInterval(autoSaveInterval);
+                   toast("⚠️ เซสชันถูกเข้าใช้งานจากอุปกรณ์อื่น ระบบจะนำท่านออกใน 3 วินาที", true, true);
+                   setTimeout(() => resetAppStateAndGoHome(), 3000);
+               }
+           }).syncUserTimer(appState.keyCode, t, false, uniqueClientId);
+        }
+      }, 15000);
+    }
+
+    window.addEventListener("beforeunload", function () {
+       if(appState.keyCode && appState.keyInfo && appState.keyInfo.remainingSeconds > 0 && !appState.keyInfo.isReadOnly) {
+           google.script.run.syncUserTimer(appState.keyCode, appState.keyInfo.remainingSeconds, true, uniqueClientId);
+       }
+    });
+    document.addEventListener("visibilitychange", function() {
+       if (document.visibilityState === 'hidden') {
+           if(appState.keyCode && appState.keyInfo && appState.keyInfo.remainingSeconds > 0 && !appState.keyInfo.isReadOnly) {
+               google.script.run.syncUserTimer(appState.keyCode, appState.keyInfo.remainingSeconds, false, uniqueClientId);
+           }
+       }
+    });
+
+    function triggerLogoutAction() {
+      if(!appState.keyCode || !appState.keyInfo) return;
+      if(appState.keyInfo.isReadOnly) {
+         resetAppStateAndGoHome();
+         return;
+      }
+      showLoading('ระบบกำลังบันทึกข้อมูลดวงชะตาให้ปลอดภัย...');
+      
+      if (appState.customerEmail) {
+         toast('กำลังเตรียมจัดส่งสำเนาผลคำทำนาย (พร้อมไพ่และเซียมซี) เข้าอีเมลของคุณ...', false, true);
+         google.script.run.sendFullReportEmail({ keyCode: appState.keyCode, email: appState.customerEmail });
+      }
+
+      google.script.run.withSuccessHandler(() => {
+        resetAppStateAndGoHome();
+      }).syncUserTimer(appState.keyCode, appState.keyInfo.remainingSeconds, true, uniqueClientId);
+    }
+
+    function resetAppStateAndGoHome() {
+        clearInterval(countdownInterval); if(autoSaveInterval) clearInterval(autoSaveInterval);
+        appState = { loggedIn: false, keyCode: '', reading: null, chat: [], keyInfo: null, seamsiUsed: false, tarotUsed: false };
+        getEl('keyInput').value = ''; lastPayloadStr = ''; templeSearchCount = 0;
+        getEl('sessionInfo').classList.add('hide'); getEl('bottomLogoutContainer').classList.add('hide');
+        getEl('seamsiResultBox').classList.add('hide'); getEl('seamsiActionBox').classList.remove('hide');
+        getEl('tarotResultBox').classList.add('hide'); getEl('tarotActionBox').classList.remove('hide');
+        resetTemple();
+        hideLoading(); show('loginView'); setStep(0); 
+    }
+
+    function updateQuotaDisplay() {
+      if(!appState.keyInfo || appState.keyInfo.isReadOnly) return;
+      
+      let chatLeft = appState.keyInfo.maxQuestions - appState.keyInfo.questionsUsed;
+      chatLeft = chatLeft > 0 ? chatLeft : 0;
+      getEl('qRemainTxt').textContent = chatLeft;
+      getEl('qRemainChat').textContent = chatLeft;
+      if (chatLeft <= 0) {
+        getEl('sendChatBtn').disabled = true; getEl('chatInput').disabled = true; getEl('chatInput').placeholder = "โควตาคำถามของคุณหมดแล้วครับ";
+        getEl('qRemainTxt').className = "text-warning";
+      } else {
+        getEl('sendChatBtn').disabled = false; getEl('chatInput').disabled = false; getEl('chatInput').placeholder = "พิมพ์คำถามของคุณที่นี่...";
+        getEl('qRemainTxt').className = "text-lucky";
+      }
+
+      let templeLeft = 2 - templeSearchCount;
+      templeLeft = templeLeft > 0 ? templeLeft : 0;
+      if (getEl('templeRemainTxt')) {
+         getEl('templeRemainTxt').textContent = templeLeft;
+         getEl('templeRemainTxt').className = templeLeft > 0 ? "text-lucky" : "text-warning";
+      }
+
+      let seamsiLeft = appState.seamsiUsed ? 0 : 1;
+      if (getEl('seamsiRemainTxt')) {
+         getEl('seamsiRemainTxt').textContent = seamsiLeft;
+         getEl('seamsiRemainTxt').className = seamsiLeft > 0 ? "text-lucky" : "text-warning";
+      }
+
+      let tarotLeft = appState.tarotUsed ? 0 : 1;
+      if (getEl('tarotRemainTxt')) {
+         getEl('tarotRemainTxt').textContent = tarotLeft;
+         getEl('tarotRemainTxt').className = tarotLeft > 0 ? "text-lucky" : "text-warning";
+      }
+
+      if (getEl('faceScanQuotaBadge')) {
+          if (appState.isFaceScanEnabled) {
+             getEl('faceScanQuotaBadge').classList.remove('hide');
+             let faceLeft = appState.faceScanUsed ? 0 : 1;
+             getEl('faceScanRemainTxt').textContent = faceLeft;
+             getEl('faceScanRemainTxt').className = faceLeft > 0 ? "text-lucky" : "text-warning";
+          } else {
+             getEl('faceScanQuotaBadge').classList.add('hide');
+          }
+      }
+    }
+
+    function renderChat(){ 
+      let chatHtml = '';
+      for(let i=0; i<appState.chat.length; i++){
+        let m = appState.chat[i];
+        let bClass = m.role === 'you' ? 'you' : 'ai';
+        let rText = m.role === 'you' ? 'คุณ' : 'อาจารย์';
+        chatHtml += '<div class="bubble ' + bClass + '"><div class="role">' + rText + '</div><div>' + formatHighlightText(m.content) + '</div></div>';
+      }
+      getEl('chatMessages').innerHTML = chatHtml;
+      getEl('chatMessages').scrollTop = getEl('chatMessages').scrollHeight; 
+    }
+
+    function renderReading(r){
+      if (r.customerEmail) {
+         appState.customerEmail = r.customerEmail;
+      }
+      appState.reading = r; setStep(2); 
+      getEl('resultTitle').textContent = 'ดวงชะตาของ ' + (r.customerName || 'คุณ');
+      
+      const startObj = new Date(); const endObj = new Date(); endObj.setDate(startObj.getDate() + 14);
+      const dOpt = { day: 'numeric', month: 'short', year: 'numeric' };
+      const rangeLabel = startObj.toLocaleDateString('th-TH', dOpt) + ' — ' + endObj.toLocaleDateString('th-TH', dOpt);
+      
+      let sumHtml = '<h3 class="h2" style="font-size: 1.15rem;">📜 พื้นดวงชะตา (อิงตามตำราพรหมชาติ)</h3>';
+      sumHtml += '<div>' + formatHighlightText(r.summary) + '</div>';
+      sumHtml += '<h3 class="h2" style="margin-top:24px; font-size: 1.15rem;">📅 คำทำนายครึ่งเดือน (ช่วงวันที่ ' + rangeLabel + ')</h3>';
+      sumHtml += '<div>' + formatHighlightText(r.forecast15Days) + '</div>';
+      sumHtml += '<h3 class="h2" style="margin-top:24px; font-size: 1.15rem;">💡 แนวทางแก้ไขและเสริมมงคล</h3>';
+      sumHtml += '<div style="background: rgba(52, 211, 153, 0.1); padding: 14px; border-left: 4px solid #34d399; border-radius: 8px;">' + formatHighlightText(r.solutions) + '</div>';
+      getEl('summaryBlock').innerHTML = sumHtml;
+
+      let nwHtml = '';
+      if (r.nationwideTemples && r.nationwideTemples.length > 0) {
+        nwHtml += '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px;">';
+        for(let i=0; i<r.nationwideTemples.length; i++){
+          let t = r.nationwideTemples[i];
+          let mapLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(t.name);
+          nwHtml += '<div style="background:rgba(0,0,0,0.3); border:1px solid var(--gold); border-radius:12px; overflow:hidden;">';
+          nwHtml += '<div style="background: linear-gradient(135deg, var(--gold), #d8a82b); color: #1b102a; padding: 12px; text-align: center; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">⛩️ วัดที่แนะนำ</div>';
+          nwHtml += '<div style="padding:16px;">';
+          nwHtml += '<h3 style="color:var(--gold2); margin:0 0 8px 0; font-size:1.1rem;">' + t.name + '</h3>';
+          nwHtml += '<p style="font-size:0.9rem; line-height:1.5; color:#ddd;">' + formatHighlightText(t.description) + '</p>';
+          nwHtml += '<a href="' + mapLink + '" target="_blank" class="btn2" style="display:block; text-align:center; margin-top:12px; text-decoration:none; padding:8px; border-radius:8px;">📍 เปิดแผนที่นำทาง</a>';
+          nwHtml += '</div></div>';
+        }
+        nwHtml += '</div>';
+      } else {
+        nwHtml = '<div class="muted">ไม่มีข้อมูลแนะนำ</div>';
+      }
+      getEl('autoTempleBlock').innerHTML = nwHtml;
+
+      let luckyHtml = '';
+      if(r.luckyColors && r.luckyColors.length > 0) {
+        luckyHtml += '<div style="flex:1; background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.05)); border: 3px solid #34d399; padding: 30px 20px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(52,211,153,0.25);">';
+        luckyHtml += '<div style="font-size: 1.4rem; margin-bottom: 16px; font-weight: 800; color: #34d399;">🟢 สีมงคลหนุนดวง</div>';
+        luckyHtml += '<div style="font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: 1px;">' + r.luckyColors.join(' / ') + '</div></div>';
+      }
+      if(r.avoidColors && r.avoidColors.length > 0) {
+        luckyHtml += '<div style="flex:1; background: linear-gradient(135deg, rgba(248, 113, 113, 0.15), rgba(248, 113, 113, 0.05)); border: 3px solid #f87171; padding: 30px 20px; border-radius: 20px; text-align: center; box-shadow: 0 8px 25px rgba(248,113,113,0.25);">';
+        luckyHtml += '<div style="font-size: 1.4rem; margin-bottom: 16px; font-weight: 800; color: #f87171;">🔴 สีกาลกิณี (ควรเลี่ยง)</div>';
+        luckyHtml += '<div style="font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: 1px;">' + r.avoidColors.join(' / ') + '</div></div>';
+      }
+      if(luckyHtml !== '') getEl('luckyBlock').innerHTML = '<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 24px;">' + luckyHtml + '</div>';
+      
+      let lottoHtml = '';
+      if (r.lottery3Digits && r.lottery3Digits.length) {
+         lottoHtml += '<div style="margin-top:16px;"><strong style="color:var(--gold2);">🎯 แนวทางเลข 3 ตัว:</strong> <div class="lottery-box">';
+         for(let i=0; i<r.lottery3Digits.length; i++) lottoHtml += '<span class="lottery-pill">' + r.lottery3Digits[i] + '</span>';
+         lottoHtml += '</div></div>';
+      }
+      if (r.lottery2Digits && r.lottery2Digits.length) {
+         lottoHtml += '<div><strong style="color:var(--gold2);">🎯 แนวทางเลข 2 ตัว:</strong> <div class="lottery-box">';
+         for(let i=0; i<r.lottery2Digits.length; i++) lottoHtml += '<span class="lottery-pill">' + r.lottery2Digits[i] + '</span>';
+         lottoHtml += '</div></div>';
+      }
+
+      let numHtml = '<div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; margin-bottom: 16px; line-height: 1.6;">';
+      numHtml += '<div><strong class="text-gold">วิเคราะห์เลขเด่น:</strong> ' + formatHighlightText(r.numberInsights?.summary?.dominant || '-') + '</div>';
+      numHtml += '<div style="margin-top:14px;"><strong class="text-muted">วิเคราะห์เลขรอง:</strong> ' + formatHighlightText(r.numberInsights?.summary?.secondary || '-') + '</div></div>';
+      numHtml += lottoHtml;
+      numHtml += '<div class="disclaimer">*คำเตือน: โปรดใช้วิจารณญาณ ตัวเลขพิจารณาจากสถิติและโหราศาสตร์เท่านั้น การลงทุนมีความเสี่ยง</div>';
+      getEl('numberBlock').innerHTML = numHtml;
+      
+      getEl('colorBlock').innerHTML = '<div><strong class="text-lucky">🟢 ทำไมต้องใช้สีมงคล?</strong> ' + formatHighlightText(r.colorInsights?.lucky) + '</div><div style="margin-top:14px;"><strong class="text-warning">🔴 เหตุผลที่ห้ามใช้สีกาลกิณี?</strong> ' + formatHighlightText(r.colorInsights?.avoid) + '</div>';
+
+      if(r.seamsiResult) {
+         appState.seamsiUsed = true;
+         getEl('seamsiActionBox').classList.add('hide');
+         const resBox = getEl('seamsiResultBox'); resBox.classList.remove('hide');
+         let outHtml = '<div class="premium-result-card"><div style="text-align:center;">';
+         outHtml += '<div class="premium-grade">ผลเสี่ยงทาย: ' + (r.seamsiResult.grade || 'ดี') + '</div>';
+         outHtml += '<div class="premium-title">ใบเซียมซีพรีเมียม ใบที่ ' + (r.seamsiResult.number || '-') + '</div>';
+         outHtml += '<div class="seamsi-poem">' + (r.seamsiResult.poem || 'กลอนเสี่ยงดวงชะตา') + '</div></div>';
+         outHtml += '<div style="border-top:1px dashed #ccc; padding-top:16px; margin-top:16px;"><strong>คำแปลและคำแนะนำหนุนดวงชะตา:</strong>';
+         outHtml += '<div>' + formatHighlightText(r.seamsiResult.meaning) + '</div></div></div>';
+         resBox.innerHTML = outHtml;
+      }
+      
+      if(r.tarotResult) {
+         appState.tarotUsed = true;
+         getEl('tarotActionBox').classList.add('hide');
+         const resBox = getEl('tarotResultBox'); resBox.classList.remove('hide');
+         let outHtml = '<div class="premium-result-card" style="border-color:#a78bfa; text-align:center;">';
+         outHtml += '<div class="premium-title" style="color:#a78bfa; border-color:#a78bfa;">คำทำนายไพ่ยิปซี 3 ใบ (อดีต - ปัจจุบัน - อนาคต)</div>';
+         outHtml += '<div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;">';
+         const cards = r.tarotResult.cards || [];
+         for(let i=0; i<cards.length; i++){
+           let c = cards[i];
+           let normalizedId = String(c.cardId || '').toLowerCase().replace(/\s+/g, '_').replace(/[^a-z_]/g, '');
+           const cardImg = tarotImages[normalizedId] ? 'https://upload.wikimedia.org/wikipedia/commons/' + tarotImages[normalizedId] : 'https://upload.wikimedia.org/wikipedia/commons/' + tarotImages['the_fool'];
+           outHtml += '<div style="flex:1; min-width:140px; max-width:200px;">';
+           outHtml += '<div class="premium-grade" style="background:#a78bfa; font-size:0.85rem; padding:6px; margin-bottom:8px;">' + c.position + ': ' + c.cardName + '</div>';
+           outHtml += '<img src="' + cardImg + '" class="tarot-image" alt="Tarot Card" style="width:100%; border:2px solid #ccc; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.2);"></div>';
+         }
+         outHtml += '</div><div style="border-top:1px dashed #ccc; padding-top:16px; text-align:left;">';
+         
+         for(let i=0; i<cards.length; i++){
+           let c = cards[i];
+           outHtml += '<div style="margin-bottom: 16px;"><strong style="color:#a78bfa; font-size:1.1rem;">🔮 ' + c.position + ' (' + c.cardName + '):</strong><br>' + formatHighlightText(c.meaning) + '</div>';
+         }
+         
+         if (r.tarotResult.overallAdvice) {
+             outHtml += '<div style="margin-top:16px; padding:16px; background:rgba(167, 139, 250, 0.1); border-left:4px solid #a78bfa; border-radius:8px;"><strong style="color:#a78bfa; font-size:1.1rem;">✨ บทสรุปและคำแนะนำจากไพ่:</strong><div style="margin-top:8px;">' + formatHighlightText(r.tarotResult.overallAdvice) + '</div></div>';
+         }
+         outHtml += '</div></div>';
+         resBox.innerHTML = outHtml;
+      }
+      
+      if(r.manualTempleResult) {
+         let searchHistory = Array.isArray(r.manualTempleResult) ? r.manualTempleResult : [r.manualTempleResult];
+         templeSearchCount = searchHistory.length; 
+         renderTempleQuota(); 
+         
+         if (templeSearchCount > 0) {
+             getEl('templeInputBox').classList.add('hide');
+             getEl('templeResultBox').classList.remove('hide');
+             
+             let finalHtml = '';
+             for (let h = 0; h < searchHistory.length; h++) {
+                 let historyItem = searchHistory[h];
+                 let savedProv = historyItem.searchProvince || 'ผลการค้นหาก่อนหน้า';
+                 let safeProv = savedProv.replace(/</g, "<").replace(/>/g, ">");
+                 
+                 let html = '<div style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; margin-bottom: 24px; border: 1px solid rgba(244,202,100,0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">';
+                 html += '<h3 style="color: var(--gold); margin-top: 0; margin-bottom: 16px; border-bottom: 1px dashed rgba(244,202,100,0.3); padding-bottom: 8px;">📍 ผลการค้นหาของจังหวัด: ' + safeProv + '</h3>';
+                 
+                 if (historyItem.temples && historyItem.temples.length > 0) {
+                     html += '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin-bottom:16px;">';
+                     for(let i=0; i<historyItem.temples.length; i++){
+                         let t = historyItem.temples[i];
+                         let mapLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(t.name);
+                         
+                         html += '<div style="background:rgba(0,0,0,0.3); border:1px solid var(--gold); border-radius:12px; overflow:hidden;">';
+                         html += '<div style="background: linear-gradient(135deg, var(--gold), #d8a82b); color: #1b102a; padding: 12px; text-align: center; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">⛩️ วัดที่แนะนำ</div>';
+                         html += '<div style="padding:16px;"><h3 style="color:var(--gold2); margin:0 0 8px 0; font-size:1.1rem;">' + t.name + '</h3>';
+                         html += '<p style="font-size:0.9rem; line-height:1.5; color:#ddd;">' + formatHighlightText(t.description) + '</p>';
+                         html += '<a href="' + mapLink + '" target="_blank" class="btn2" style="display:block; text-align:center; margin-top:12px; text-decoration:none; padding:8px; border-radius:8px;">📍 เปิดแผนที่นำทาง</a></div></div>';
+                     }
+                     html += '</div>';
+                 }
+                 if (historyItem.festivals) {
+                     html += '<div style="background: rgba(244, 202, 100, 0.1); padding: 16px; border-left: 4px solid var(--gold); border-radius: 8px;"><h4 style="color:var(--gold2); margin-top:0; font-size:1.1rem;">🎉 ข่าวสารงานบุญ/อัปเดต</h4>' + formatHighlightText(historyItem.festivals) + '</div>';
+                 }
+                 html += '</div>';
+                 finalHtml = html + finalHtml; 
+             }
+             getEl('templeResultContent').innerHTML = finalHtml;
+         }
+      }
+
+      renderProducts(r.suggestedProducts);
+
+      if (appState.isFaceScanEnabled) {
+         getEl('faceScanCard').classList.remove('hide');
+         if(r.faceScanResult) {
+            appState.faceScanUsed = true;
+            getEl('faceScanActionBox').classList.add('hide');
+            const resBox = getEl('faceScanResultBox'); resBox.classList.remove('hide');
+            let outHtml = '<div class="premium-result-card" style="border-color:#0ea5e9; text-align:center;">';
+            if(r.faceScanResult.imageUrl) {
+                outHtml += '<img src="' + r.faceScanResult.imageUrl + '" style="max-width:200px; border-radius:12px; margin-bottom:15px; border:2px solid #ccc; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">';
+            }
+            outHtml += '<div class="premium-title" style="color:#0ea5e9; border-color:#0ea5e9;">ผลการวิเคราะห์สัดส่วนใบหน้า</div>';
+            outHtml += '<div style="text-align:left; line-height: 1.6;">' + formatHighlightText(r.faceScanResult.reading) + '</div></div>';
+            resBox.innerHTML = outHtml;
+         }
+      } else {
+         getEl('faceScanCard').classList.add('hide');
+      }
+
+      if(appState.keyInfo && !appState.keyInfo.isReadOnly) {
+         updateQuotaDisplay(); getEl('sessionInfo').classList.remove('hide');
+      }
+
+      hideLoading(); show('resultView'); toast('โหลดข้อมูลคำทำนายสำเร็จ');
+      if(appState.chat.length === 0) appState.chat = [{role:'system', content:'สวัสดีครับ สามารถพิมพ์ถามเรื่องดวงชะตาต่อได้เลยครับ อาจารย์ยินดีให้คำปรึกษาเพิ่มเติมอย่างละเอียด'}]; 
+      renderChat(); setStep(3); 
+    }
+
+    function renderTempleQuota() {
+      let remain = 2 - templeSearchCount;
+      if (remain < 0) remain = 0;
+      const quotaTxt = getEl('templeQuotaTxt');
+      if (quotaTxt) quotaTxt.innerText = `(เหลือสิทธิ์ ${remain} ครั้ง)`;
+      const resetBtn = getEl('resetTempleBtn');
+      if (resetBtn) resetBtn.innerText = `ค้นหาจังหวัดอื่น สิทธิ์คงเหลือ ${remain} ครั้ง`;
+      const findBtn = getEl('findTempleBtn');
+      if (remain <= 0) {
+        if (findBtn) {
+          findBtn.disabled = true;
+          findBtn.innerText = 'ท่านใช้สิทธิ์ค้นหาครบแล้ว';
+        }
+        if (resetBtn) resetBtn.classList.add('hide'); 
+      } else {
+        if (findBtn) {
+          findBtn.disabled = false;
+          findBtn.innerText = '🔍 ค้นหาวัดและงานบุญ';
+        }
+        if (resetBtn) resetBtn.classList.remove('hide');
+      }
+      updateQuotaDisplay();
+    }
+
+    getEl('findTempleBtn').onclick = () => {
+      if (templeSearchCount >= 2) return toast('ท่านใช้สิทธิ์ค้นหาวัดครบ 2 ครั้งแล้วครับ', true);
+      const prov = getEl('templeProvince').value.trim();
+      if(!prov) return toast('กรุณาระบุจังหวัดเป้าหมายก่อนครับ', true);
+      
+      showLoading('กำลังวิเคราะห์และค้นหาวัดศักดิ์สิทธิ์และงานบุญใน ' + prov + '...');
+      
+      google.script.run.withSuccessHandler(res => {
+        hideLoading(); 
+        templeSearchCount++;
+        renderTempleQuota(); 
+        
+        getEl('templeInputBox').classList.add('hide'); 
+        getEl('templeResultBox').classList.remove('hide');
+        const safeProv = prov.replace(/</g, "<").replace(/>/g, ">");
+        
+        let html = '<div style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; margin-bottom: 24px; border: 1px solid rgba(244,202,100,0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">';
+        html += '<h3 style="color: var(--gold); margin-top: 0; margin-bottom: 16px; border-bottom: 1px dashed rgba(244,202,100,0.3); padding-bottom: 8px;">📍 ผลการค้นหาของจังหวัด: ' + safeProv + '</h3>';
+        
+        if (res.temples && res.temples.length > 0) {
+           html += '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin-bottom:16px;">';
+           for(let i=0; i<res.temples.length; i++){
+               let t = res.temples[i];
+               let mapLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(t.name + ' ' + prov);
+               
+               html += '<div style="background:rgba(0,0,0,0.3); border:1px solid var(--gold); border-radius:12px; overflow:hidden;">';
+               html += '<div style="background: linear-gradient(135deg, var(--gold), #d8a82b); color: #1b102a; padding: 12px; text-align: center; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">⛩️ วัดที่แนะนำ</div>';
+               html += '<div style="padding:16px;"><h3 style="color:var(--gold2); margin:0 0 8px 0; font-size:1.1rem;">' + t.name + '</h3>';
+               html += '<p style="font-size:0.9rem; line-height:1.5; color:#ddd;">' + formatHighlightText(t.description) + '</p>';
+               html += '<a href="' + mapLink + '" target="_blank" class="btn2" style="display:block; text-align:center; margin-top:12px; text-decoration:none; padding:8px; border-radius:8px;">📍 เปิดแผนที่นำทาง</a></div></div>';
+           }
+           html += '</div>';
+        }
+        
+        if (res.festivals) {
+           html += '<div style="background: rgba(244, 202, 100, 0.1); padding: 16px; border-left: 4px solid var(--gold); border-radius: 8px;">';
+           html += '<h4 style="color:var(--gold2); margin-top:0; font-size:1.1rem;">🎉 ข่าวสารงานบุญ/อัปเดต และแหล่งอ้างอิง</h4>';
+           html += formatHighlightText(res.festivals) + '</div>';
+        }
+        html += '</div>';
+        getEl('templeResultContent').insertAdjacentHTML('afterbegin', html);
+        
+      }).withFailureHandler(err => {
+        hideLoading(); 
+        toast(err.message||err, true);
+      }).findTempleForUser({ keyCode: appState.keyCode, reading: appState.reading, province: prov });
+    };
+
+    function resetTemple() {
+      if (templeSearchCount >= 2) return toast('ท่านใช้สิทธิ์ค้นหาวัดครบ 2 ครั้งแล้วครับ', true);
+      getEl('templeInputBox').classList.remove('hide');
+      getEl('templeProvince').value = '';
+      getEl('templeProvince').focus(); 
+    }
+
+    function shakeSeamsi() {
+      if (appState.seamsiUsed) return toast('สิทธิ์เขย่าเซียมซีของคุณในรอบนี้ถูกใช้ไปแล้วครับ', true);
+      const btn = getEl('seamsiShakeBtn');
+      btn.classList.add('shake-anim'); getEl('seamsiStick').classList.add('pop-stick');
+      showLoading('กำลังตั้งสมาธิ เขย่ากระบอกติ้วเซียมซีมงคล...');
+      
+      google.script.run.withSuccessHandler((res) => {
+        btn.classList.remove('shake-anim'); getEl('seamsiStick').classList.remove('pop-stick');
+        hideLoading(); getEl('seamsiActionBox').classList.add('hide');
+        const resBox = getEl('seamsiResultBox'); resBox.classList.remove('hide');
+        
+        appState.seamsiUsed = true; 
+        updateQuotaDisplay();
+        if (res.grade === 'ดีเลิศ' || res.grade === 'ดีเยี่ยม' || res.grade === 'ดีมาก') {
+            fireConfetti();
+        }
+        let outHtml = '<div class="premium-result-card"><div style="text-align:center;">';
+        outHtml += '<div class="premium-grade">ผลเสี่ยงทาย: ' + (res.grade || 'ดี') + '</div>';
+        outHtml += '<div class="premium-title">ใบเซียมซีพรีเมียม ใบที่ ' + (res.number || '7') + '</div>';
+        outHtml += '<div class="seamsi-poem">' + (res.poem || 'กลอนเสี่ยงดวงชะตา') + '</div></div>';
+        outHtml += '<div style="border-top:1px dashed #ccc; padding-top:16px; margin-top:16px;"><strong>คำแปลและคำแนะนำหนุนดวงชะตา:</strong>';
+        outHtml += '<div>' + formatHighlightText(res.meaning) + '</div></div></div>';
+        resBox.innerHTML = outHtml;
+      }).withFailureHandler((e) => {
+        btn.classList.remove('shake-anim'); getEl('seamsiStick').classList.remove('pop-stick'); hideLoading(); toast('เกิดข้อผิดพลาด: ' + e, true);
+      }).drawUserSeamsi({ keyCode: appState.keyCode, reading: appState.reading });
+    }
+
+    function drawTarotCard() {
+      if (appState.tarotUsed) return toast('สิทธิ์เปิดไพ่ยิปซีของคุณในรอบนี้ถูกใช้ไปแล้วครับ', true);
+      getEl('tarotDrawBtn').classList.add('shake-anim');
+      showLoading('กำลังตั้งสมาธิ สับไพ่และเปิดหน้าไพ่ยิปซี 3 ใบ...');
+      
+      google.script.run.withSuccessHandler((res) => {
+        getEl('tarotDrawBtn').classList.remove('shake-anim'); hideLoading();
+        getEl('tarotActionBox').classList.add('hide');
+        const resBox = getEl('tarotResultBox'); resBox.classList.remove('hide');
+        
+        appState.tarotUsed = true; 
+        updateQuotaDisplay();
+        
+        let outHtml = '<div class="premium-result-card" style="border-color:#a78bfa; text-align:center;">';
+        outHtml += '<div class="premium-title" style="color:#a78bfa; border-color:#a78bfa;">คำทำนายไพ่ยิปซี 3 ใบ (อดีต - ปัจจุบัน - อนาคต)</div>';
+        outHtml += '<div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;">';
+        
+        const cards = res.cards || [];
+        for(let i=0; i<cards.length; i++){
+          let c = cards[i];
+          let normalizedId = String(c.cardId || '').toLowerCase().replace(/\s+/g, '_').replace(/[^a-z_]/g, '');
+          const cardImg = tarotImages[normalizedId] ? 'https://upload.wikimedia.org/wikipedia/commons/' + tarotImages[normalizedId] : 'https://upload.wikimedia.org/wikipedia/commons/' + tarotImages['the_fool'];
+          outHtml += '<div style="flex:1; min-width:140px; max-width:200px;">';
+          outHtml += '<div class="premium-grade" style="background:#a78bfa; font-size:0.85rem; padding:6px; margin-bottom:8px;">' + c.position + ': ' + c.cardName + '</div>';
+          outHtml += '<img src="' + cardImg + '" class="tarot-image" alt="Tarot Card" style="width:100%; border:2px solid #ccc; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.2);"></div>';
+        }
+        outHtml += '</div><div style="border-top:1px dashed #ccc; padding-top:16px; text-align:left;">';
+        
+        for(let i=0; i<cards.length; i++){
+          let c = cards[i];
+          outHtml += '<div style="margin-bottom: 16px;"><strong style="color:#a78bfa; font-size:1.1rem;">🔮 ' + c.position + ' (' + c.cardName + '):</strong><br>' + formatHighlightText(c.meaning) + '</div>';
+        }
+        
+        if (res.overallAdvice) {
+            outHtml += '<div style="margin-top:16px; padding:16px; background:rgba(167, 139, 250, 0.1); border-left:4px solid #a78bfa; border-radius:8px;">';
+            outHtml += '<strong style="color:#a78bfa; font-size:1.1rem;">✨ บทสรุปและคำแนะนำจากไพ่:</strong>';
+            outHtml += '<div style="margin-top:8px;">' + formatHighlightText(res.overallAdvice) + '</div></div>';
+        }
+        outHtml += '</div></div>';
+        resBox.innerHTML = outHtml;
+      }).withFailureHandler((e) => {
+        getEl('tarotDrawBtn').classList.remove('shake-anim'); hideLoading(); toast('เกิดข้อผิดพลาด: ' + e, true);
+      }).drawUserTarot({ keyCode: appState.keyCode, reading: appState.reading });
+    }
+
+    function startVoiceRecognition() {
+      const chatInput = getEl('chatInput');
+      chatInput.focus();
+      toast('💡 แป้นพิมพ์เปิดแล้ว! กดไอคอน 🎙️ บนแป้นพิมพ์เพื่อพูดได้เลยครับ');
+    }
+
+    getEl('loginBtn').onclick = () => { 
+      const keyCode = getEl('keyInput').value.trim().toUpperCase(); 
+      if(!keyCode) return toast('กรุณากรอก Access Key', true); 
+      showLoading('กำลังตรวจสอบ Access Key และตรวจสอบสิทธิ์เครื่อง...'); 
+      google.script.run.withSuccessHandler((res)=>{ 
+        hideLoading(); 
+        if(res && res.ok){ 
+          appState.loggedIn = true; appState.keyCode = keyCode; appState.keyInfo = res.keyInfo; 
+          appState.seamsiUsed = false; appState.tarotUsed = false; templeSearchCount = 0; 
+          renderTempleQuota(); 
+
+          if(res.keyInfo && !res.keyInfo.isReadOnly && res.keyInfo.remainingSeconds > 0) {
+            startTimer(res.keyInfo.remainingSeconds);
+          }
+          
+          if (res.hasHistory && res.reading) {
+            if(res.chatHistory && res.chatHistory.length > 0) appState.chat = res.chatHistory;
+            lastPayloadStr = JSON.stringify({ name: res.reading.customerName, birthDay: res.reading.birthDay }); 
+            renderReading(res.reading);
+            if(res.keyInfo.isReadOnly) { toast("โควตาหมดแล้ว ระบบเปิดโหมดอ่านอย่างเดียวให้ครับ", false, true); }
+          } else {
+            show('userView'); setStep(1); 
+          }
+        } else { toast(res.error || 'Key ไม่ถูกต้อง', true, true); }
+      }).withFailureHandler((err) => {
+        hideLoading();
+        toast('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ กรุณาลองใหม่', true);
+      }).loginUser(keyCode, uniqueClientId); 
+    };
+
+    getEl('generateBtn').onclick = () => { 
+      const name = getEl('nameInput').value.trim(); 
+      const birthDay = getEl('birthDay').value.trim(); 
+      const birthMonth = getEl('birthMonth').value.trim(); 
+      const birthYear = getEl('birthYear').value.trim(); 
+      const h = getEl('birthHour').value; const m = getEl('birthMinute').value;
+      const birthTime = (h && m) ? `${h}:${m}` : '';
+      const phone = getEl('phoneNumber').value.trim();
+      const emailForm = getEl('userEmailForm').value.trim(); 
+      
+      if (!name) return toast('กรุณาระบุ "ชื่อ-นามสกุล" ของคุณ', true); 
+      const dNum = Number(birthDay);
+      if (!birthDay || isNaN(dNum) || dNum < 1 || dNum > 31) return toast('กรุณาระบุวันที่เกิดให้ถูกต้อง (1-31)', true); 
+      const mNum = Number(birthMonth);
+      if (!birthMonth || isNaN(mNum) || mNum < 1 || mNum > 12) return toast('กรุณาระบุเดือนเกิดให้ถูกต้อง (1-12)', true); 
+      const yNum = Number(birthYear);
+      const currentThaiYear = new Date().getFullYear() + 543;
+      if (!birthYear || birthYear.length !== 4 || isNaN(yNum)) return toast('กรุณาระบุปีเกิด (พ.ศ.) ให้ครบ 4 หลัก เช่น 2535', true);
+      if (yNum > currentThaiYear) return toast(`ปีเกิด (พ.ศ.) ต้องไม่เกินปีปัจจุบัน (${currentThaiYear})`, true);
+      if (yNum < 2450) return toast('กรุณาระบุปีเกิดเป็น "พ.ศ." ให้ถูกต้องตามความเป็นจริง', true);
+      if (phone !== '') {
+          if (phone.length !== 10 || !phone.startsWith('0')) return toast('เบอร์โทรศัพท์ต้องมี 10 หลักและขึ้นต้นด้วย 0', true);
+      }
+      if (emailForm !== '') {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(emailForm)) return toast('รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง', true);
+      }
+
+      appState.customerEmail = emailForm;
+
+      const payload = { 
+          keyCode: appState.keyCode, 
+          name: name, 
+          birthDay: birthDay, 
+          birthMonth: birthMonth, 
+          birthYear: birthYear, 
+          birthTime: birthTime, 
+          phoneNumber: phone, 
+          vehiclePlate: getEl('vehiclePlate').value.trim(), 
+          email: emailForm 
+      }; 
+      
+      let currentPayloadStr = JSON.stringify({name: name, birthDay: birthDay, birthMonth: birthMonth, birthYear: birthYear, birthTime: birthTime});
+      if(appState.reading && currentPayloadStr === lastPayloadStr) { show('resultView'); return; }
+      
+      showLoading('กำลังวิเคราะห์ดวงดาว...'); 
+      google.script.run.withSuccessHandler((res) => { 
+          lastPayloadStr = currentPayloadStr; 
+          if(res && res.keyInfo) appState.keyInfo = res.keyInfo; 
+          renderReading(res); 
+      }).withFailureHandler(err=>{ 
+          hideLoading(); toast(err.message||err, true); 
+      }).generateHoroscope(payload); 
+    };
+
+    getEl('sendChatBtn').onclick = () => { 
+      const rawQ = getEl('chatInput').value.trim(); 
+      if(!rawQ) return; 
+      if(appState.keyInfo && appState.keyInfo.questionsUsed >= appState.keyInfo.maxQuestions) return toast('โควตาคำถามของคุณหมดแล้วครับ', true);
+      
+      let currentQNum = (appState.keyInfo ? appState.keyInfo.questionsUsed : 0) + 1;
+      const q = 'คำถามที่ ' + currentQNum + ':\n' + rawQ;
+      
+      appState.chat.push({role:'you', content:q}); 
+      renderChat(); 
+      getEl('chatInput').value = ''; 
+      setStep(3); 
+      
+      setChatStatus('อาจารย์กำลังตรวจดวงและพิมพ์คำตอบ...', 'typing'); 
+      showLoading('กำลังวิเคราะห์คำตอบ...'); 
+      
+      google.script.run.withSuccessHandler((r) => { 
+        hideLoading(); 
+        appState.chat.push({role:'ai', content: r.answer || JSON.stringify(r)}); 
+        
+        if(appState.keyInfo && appState.keyInfo.questionsUsed !== undefined) { 
+          appState.keyInfo.questionsUsed += 1; 
+          updateQuotaDisplay(); 
+        }
+        if (r.updatedProducts) {
+           appState.reading.suggestedProducts = r.updatedProducts;
+           renderProducts(r.updatedProducts);
+        }
+        renderChat(); 
+        setChatStatus('ตอบแล้ว', 'idle'); 
+      }).withFailureHandler(err=>{ 
+        hideLoading(); 
+        setChatStatus('เกิดข้อผิดพลาด', 'idle'); 
+        toast(err.message||err, true); 
+      }).chatWithGemini({ keyCode: appState.keyCode, question: q, reading: appState.reading, history: appState.chat }); 
+    };
+
+    function triggerSaveAsPdf() {
+      getEl('alertTitle').textContent = '📥 วิธีบันทึกเป็นไฟล์ PDF';
+      getEl('alertBody').innerHTML = '<div style="text-align:left; font-size:1.05rem; line-height:1.6; color:#ddd;"><p>เพื่อให้ได้หน้าตากระดาษพื้นหลังสีขาวที่สวยงาม อ่านง่าย และสระไม่ลอย:</p><ol style="padding-left: 20px; margin-bottom:0;"><li>ระบบจะเปิดหน้าต่างการพิมพ์ขึ้นมา</li><li>ให้คุณเปลี่ยนตัวเลือก <b>เครื่องพิมพ์ (Destination)</b></li><li>เลือกเป็น <b>"บันทึกเป็น PDF (Save as PDF)"</b></li><li>กดปุ่ม <b>บันทึก</b> เพื่อเก็บลงเครื่องได้เลยครับ</li></ol></div>';
+      getEl('alertModal').classList.add('show');
+      
+      const okBtn = getEl('alertModal').querySelector('.btn');
+      const oldOnClick = okBtn.onclick;
+      
+      okBtn.onclick = () => {
+          getEl('alertModal').classList.remove('show');
+          setTimeout(() => { window.print(); }, 500);
+          setTimeout(() => { 
+             okBtn.onclick = oldOnClick; 
+             getEl('alertTitle').textContent = '⚠️ แจ้งเตือนจากระบบ'; 
+          }, 1500);
+      };
+    }
+
+    getEl('createWallpaperBtn').onclick = () => {
+      if (!appState.reading) return toast('ไม่พบข้อมูลดวงชะตา กรุณารับคำทำนายก่อนครับ', true);
+      
+      const modal = getEl('wallpaperModal');
+      modal.classList.add('show');
+      showLoading('กำลังประกอบร่างวอลเปเปอร์มงคล...', 'กำลังผสานสีมงคลและพลังงานไพ่ยิปซี');
+      
+      try {
+         const canvas = getEl('talismanCanvas');
+         const ctx = canvas.getContext('2d');
+         const r = appState.reading;
+
+         let color1 = '#1c2438'; 
+         let color2 = '#0a101d';
+         
+         if (r.luckyColors && r.luckyColors.length > 0) {
+            const colorMap = {
+               'เขียว': '#064e3b', 'แดง': '#7f1d1d', 'เหลือง': '#78350f', 'ชมพู': '#701a75',
+               'ดำ': '#0f172a', 'ม่วง': '#4c1d95', 'ส้ม': '#7c2d12', 'น้ำเงิน': '#1e3a8a',
+               'ฟ้า': '#0c4a6e', 'ขาว': '#334155', 'ทอง': '#854d0e', 'ครีม': '#451a03'
+            };
+            const primaryThaiColor = String(r.luckyColors[0]).trim();
+            Object.keys(colorMap).forEach(key => {
+               if (primaryThaiColor.includes(key)) color1 = colorMap[key];
+            });
+         }
+
+         const bgGrad = ctx.createRadialGradient(540, 960, 150, 540, 960, 1100);
+         bgGrad.addColorStop(0, color1);
+         bgGrad.addColorStop(0.6, color2);
+         bgGrad.addColorStop(1, '#020408');
+         ctx.fillStyle = bgGrad;
+         ctx.fillRect(0, 0, 1080, 1920);
+
+         ctx.shadowBlur = 0;
+         for (let i = 0; i < 150; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random() * 1080, Math.random() * 1920, Math.random() * 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.7})`;
+            ctx.fill();
+         }
+
+         ctx.save();
+         ctx.translate(540, 880);
+         
+         ctx.beginPath();
+         ctx.arc(0, 0, 470, 0, Math.PI * 2);
+         ctx.strokeStyle = 'rgba(244, 202, 100, 0.12)';
+         ctx.lineWidth = 12;
+         ctx.stroke();
+
+         ctx.beginPath();
+         ctx.arc(0, 0, 420, 0, Math.PI * 2);
+         ctx.setLineDash([12, 18]);
+         ctx.strokeStyle = 'rgba(244, 202, 100, 0.35)';
+         ctx.lineWidth = 4;
+         ctx.stroke();
+
+         ctx.setLineDash([]);
+         for (let i = 0; i < 24; i++) {
+            ctx.rotate((Math.PI * 2) / 24);
+            ctx.beginPath();
+            ctx.moveTo(450, 0);
+            ctx.lineTo(475, 0);
+            ctx.strokeStyle = 'rgba(244, 202, 100, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+         }
+         ctx.restore();
+
+         const goldGrad = ctx.createLinearGradient(0, 140, 0, 240);
+         goldGrad.addColorStop(0, '#FFF9C4');
+         goldGrad.addColorStop(0.5, '#F4CA64');
+         goldGrad.addColorStop(1, '#A17f1a');
+
+         ctx.textAlign = 'center';
+         ctx.shadowColor = 'rgba(244,202,100,0.5)';
+         ctx.shadowBlur = 25;
+         ctx.fillStyle = goldGrad;
+         ctx.font = '800 85px Sarabun';
+         ctx.fillText('ดวงชะตามหาเศรษฐี', 540, 210);
+
+         ctx.shadowBlur = 0;
+         ctx.fillStyle = '#bbaed8';
+         ctx.font = '500 44px Sarabun';
+         ctx.fillText(`ลิขิตฟ้าประจำตัว : คุณ ${r.customerName || 'เจ้าชะตา'}`, 540, 290);
+
+         const img = new Image();
+         img.crossOrigin = 'Anonymous'; 
+         
+         let targetCardId = 'the_sun'; 
+
+         if (r.tarotResult && r.tarotResult.cards && r.tarotResult.cards.length > 0) {
+            const goodCards = ['the_sun', 'the_world', 'the_star', 'the_empress', 'the_emperor', 'wheel_of_fortune', 'the_magician', 'the_chariot', 'strength', 'the_lovers', 'the_high_priestess'];
+            let foundGoodCard = null;
+            for (let i = 0; i < r.tarotResult.cards.length; i++) {
+                let id = String(r.tarotResult.cards[i].cardId || '').toLowerCase().replace(/\s+/g, '_').replace(/[^a-z_]/g, '');
+                if (goodCards.includes(id) && tarotImages[id]) {
+                    foundGoodCard = id;
+                    break;
+                }
+            }
+            if (foundGoodCard) {
+                targetCardId = foundGoodCard; 
+            } else {
+                const remedialCards = ['the_sun', 'the_world', 'wheel_of_fortune'];
+                targetCardId = remedialCards[Math.floor(Math.random() * remedialCards.length)];
+            }
+         }
+         
+         img.src = 'https://upload.wikimedia.org/wikipedia/commons/' + tarotImages[targetCardId];
+         
+         img.onload = function() {
+            const cX = 265, cY = 420, cW = 550, cH = 910;
+
+            ctx.shadowColor = '#f4ca64';
+            ctx.shadowBlur = 80;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(cX, cY, cW, cH);
+            
+            ctx.shadowBlur = 0;
+            ctx.drawImage(img, cX, cY, cW, cH);
+
+            const frameGrad = ctx.createLinearGradient(cX, cY, cX + cW, cY + cH);
+            frameGrad.addColorStop(0, '#FFF9C4');
+            frameGrad.addColorStop(0.5, '#B38728');
+            frameGrad.addColorStop(1, '#F4CA64');
+            ctx.strokeStyle = frameGrad;
+            ctx.lineWidth = 14;
+            ctx.strokeRect(cX, cY, cW, cH);
+
+            ctx.fillStyle = '#34d399';
+            ctx.font = '600 48px Sarabun';
+            ctx.fillText('เลขมงคลหนุนโชคลาภทรัพย์สิน', 540, 1510);
+
+            let numStr = '7 8 9  4 5';
+            if (r.lottery3Digits && r.lottery2Digits) {
+               numStr = `${r.lottery3Digits.slice(0,1).join(' ')} - ${r.lottery2Digits.slice(0,2).join(' ')}`;
+            }
+
+            const goldNum = ctx.createLinearGradient(0, 1540, 0, 1680);
+            goldNum.addColorStop(0, '#FFF9C4');
+            goldNum.addColorStop(0.5, '#F4CA64');
+            goldNum.addColorStop(1, '#B38728');
+            
+            ctx.fillStyle = goldNum;
+            ctx.font = '800 130px Sarabun';
+            ctx.shadowColor = 'rgba(244,202,100,0.7)';
+            ctx.shadowBlur = 35;
+            ctx.fillText(numStr, 540, 1660);
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.font = '36px Sarabun';
+            ctx.fillText('POWERED BY @KRU_HOROSCOPE', 540, 1830);
+            
+            hideLoading();
+         };
+         
+         img.onerror = function() {
+            hideLoading();
+            toast('รูปภาพประกอบมีขนาดใหญ่เกินไปชั่วคราว ลองกดใหม่อีกครั้งครับ');
+         };
+
+      } catch (err) {
+         hideLoading();
+         toast('ระบบคำนวณกราฟิกขัดข้อง: ' + err.message, true);
+      }
+    };
+
+    getEl('downloadWallpaperBtn').onclick = () => {
+      const canvas = getEl('talismanCanvas');
+      const link = document.createElement('a');
+      link.download = `Wallpaper_${appState.reading.customerName || 'Premium'}.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+      toast('เริ่มดาวน์โหลดวอลเปเปอร์มงคลพรีเมียมแล้วครับ! 🎉');
+    };
+
+    if (getEl('createWallpaperBtnChat')) {
+        getEl('createWallpaperBtnChat').onclick = getEl('createWallpaperBtn').onclick;
+    }
+
+    getEl('pdfBtn').onclick = () => { setStep(4); window.print(); };
+    getEl('pdfChatBtn').onclick = () => { setStep(4); window.print(); };
+    getEl('downloadPdfBtn').onclick = () => { setStep(4); triggerSaveAsPdf(); };
+    getEl('downloadChatPdfBtn').onclick = () => { setStep(4); triggerSaveAsPdf(); };
+
+    function trackAndRedirect(productId, url) { if (productId) google.script.run.trackProductClick(productId); window.open(url, '_blank'); }
+
+    const handleSmartEmailSending = () => {
+      if (appState.customerEmail && appState.customerEmail.includes('@')) {
+         getEl('userEmailInput').value = appState.customerEmail;
+      } else {
+         getEl('userEmailInput').value = ''; 
+      }
+      getEl('emailModal').classList.add('show');
+    };
+
+    getEl('openEmailModalBtn').onclick = handleSmartEmailSending;
+    if (getEl('openEmailModalBtnChat')) {
+        getEl('openEmailModalBtnChat').onclick = handleSmartEmailSending;
+    }
+
+    getEl('confirmSendEmailBtn').onclick = () => {
+      const email = getEl('userEmailInput').value.trim();
+      if (!email || !email.includes('@')) return toast('กรุณากรอกอีเมลให้ถูกต้อง', true);
+      appState.customerEmail = email; 
+      getEl('emailModal').classList.remove('show');
+      showLoading('กำลังรวบรวมข้อมูลทั้งหมดและส่งอีเมล...');
+      
+      google.script.run.withSuccessHandler((res) => {
+        hideLoading();
+        toast('ส่งผลคำทำนายฉบับสมบูรณ์เข้าอีเมลเรียบร้อยแล้ว!');
+      }).withFailureHandler((err) => {
+        hideLoading();
+        toast(err.message || err, true);
+      }).sendFullReportEmail({ keyCode: appState.keyCode, email: email });
+    };
+    
+    document.querySelectorAll('.star').forEach(s => {
+       s.onclick = () => { submitRating(Number(s.dataset.value)); };
+    });
+
+    function submitRating(star) {
+       showLoading('กำลังบันทึกคะแนน...');
+       google.script.run.withSuccessHandler((res) => {
+          hideLoading();
+          getEl('starGroup').style.display = 'none';
+          getEl('ratingThanks').style.display = 'block';
+          if (star === 5) { showTiktokReviewModal(); } 
+          else { toast('บันทึกคะแนนเรียบร้อย ขอบคุณครับ!'); }
+       }).withFailureHandler((err) => {
+          hideLoading(); toast(err.message||err, true);
+       }).submitFeedback({ keyCode: appState.keyCode, rating: star });
+    }
+
+    function showTiktokReviewModal() {
+       getEl('alertTitle').innerHTML = '🎁 รับคูปองส่วนลด 10% ทันที! เมื่อซื้อ Key ต่อไป';
+       const lineBtnHref = getEl('lineContactBtn') ? getEl('lineContactBtn').href : 'https://line.me';
+       getEl('alertBody').innerHTML = `<div style="text-align:center;">
+         <p style="font-size:4.5rem; margin:0; animation: pulse 2s infinite;">🤩</p>
+         <p style="color:#34d399; font-weight:bold; font-size:1.2rem; margin-top:10px;">ดีใจที่คุณชอบคำทำนายของเราครับ!</p>
+         <div class="muted" style="font-size:1.05rem; line-height:1.6; padding:10px; background:rgba(255,255,255,0.05); border-radius:12px; margin-top:10px; border:1px dashed rgba(255,255,255,0.2);">
+             <p style="margin:0;">📱 <b>วิธีรับส่วนลดง่ายๆ:</b></p>
+             <ol style="text-align:left; margin-bottom:0;">
+                 <li><b>แคปหน้าจอ</b> ผลคำทำนาย หรือใบเซียมซี</li>
+                 <li>นำไปโพสต์รีวิวใน <b>TikTok</b> ของคุณ</li>
+                 <li>พิมพ์แท็กช่อง <b>@Kru_Horoscope</b></li>
+                 <li>แคปหน้าโพสต์ แล้วทัก LINE ส่งให้แอดมิน</li>
+             </ol>
+         </div>
+         <a href="${lineBtnHref}" target="_blank" style="display:inline-block; margin-top:15px; background: linear-gradient(135deg, #06C755, #05A344); color: #fff; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(6,199,85,0.4);">💬 ส่งหลักฐานรับส่วนลดที่ LINE</a>
+       </div>`;
+       getEl('alertModal').classList.add('show');
+    }
+
+    let capturedBase64 = null;
+
+    function startCamera() {
+       if (appState.faceScanUsed) return toast('สิทธิ์วิเคราะห์โหงวเฮ้งของคุณถูกใช้ไปแล้วครับ', true);
+       getEl('cameraInput').click();
+    }
+
+    function handleCameraUpload(event) {
+       const file = event.target.files[0];
+       if (!file) return;
+
+       const reader = new FileReader();
+       reader.onload = function(e) {
+           const img = new Image();
+           img.onload = function() {
+               const canvas = getEl('cameraCanvas');
+               const ctx = canvas.getContext('2d');
+               const MAX_WIDTH = 600;
+               let width = img.width;
+               let height = img.height;
+               if (width > MAX_WIDTH) {
+                   height = Math.round((height * MAX_WIDTH) / width);
+                   width = MAX_WIDTH;
+               }
+               canvas.width = width; canvas.height = height;
+               ctx.drawImage(img, 0, 0, width, height);
+               capturedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+               getEl('cameraPreview').src = capturedBase64;
+               getEl('cameraSetupBox').classList.add('hide');
+               getEl('cameraActiveBox').classList.remove('hide');
+           }
+           img.src = e.target.result;
+       }
+       reader.readAsDataURL(file);
+    }
+
+    function stopCamera() {
+       capturedBase64 = null;
+       getEl('cameraInput').value = '';
+       getEl('cameraActiveBox').classList.add('hide');
+       getEl('cameraSetupBox').classList.remove('hide');
+    }
+
+    function captureAndAnalyzeFace() {
+       if (!capturedBase64) return toast('กรุณาถ่ายภาพก่อนครับ', true);
+       getEl('cameraActiveBox').classList.add('hide');
+       getEl('faceScanningBox').classList.remove('hide');
+       getEl('scanningImage').src = capturedBase64;
+       
+       const thaiStatusText = getEl('scanStatusThai');
+       const hudText = getEl('hudProgressText');
+       let step = 0;
+       
+       const simInterval = setInterval(() => {
+           step++;
+           if (step === 1) { thaiStatusText.textContent = "วิเคราะห์สัดส่วนหน้าผากและโครงหน้า..."; hudText.textContent = "SCANNING: FOREHEAD & BONE STRUCTURE"; }
+           else if (step === 2) { thaiStatusText.textContent = "อ่านลักษณะคิ้วและดวงตา..."; hudText.textContent = "SCANNING: EYES & EYEBROWS ALIGNMENT"; }
+           else if (step === 3) { thaiStatusText.textContent = "คำนวณฐานทรัพย์จากจมูกและริมฝีปาก..."; hudText.textContent = "CALCULATING: WEALTH & LIPS PROPORTION"; }
+           else if (step === 4) { thaiStatusText.textContent = "ผสานข้อมูลเข้ากับพื้นดวงชะตาหลัก..."; hudText.textContent = "SYNCHRONIZING: HOROSCOPE CORE DATA"; step = 0; }
+       }, 2500);
+
+       google.script.run.withSuccessHandler((res) => {
+           clearInterval(simInterval);
+           toast('วิเคราะห์โหงวเฮ้งสำเร็จ!');
+           appState.faceScanUsed = true;
+           appState.reading.faceScanResult = res;
+           getEl('faceScanningBox').classList.add('hide');
+           renderReading(appState.reading); 
+       }).withFailureHandler((err) => {
+           clearInterval(simInterval);
+           getEl('faceScanningBox').classList.add('hide');
+           getEl('cameraSetupBox').classList.remove('hide'); 
+           
+           let errMsg = err.message || err;
+           errMsg = errMsg.replace(/^Error:\s*/i, '').replace(/^Exception:\s*/i, '');
+           getEl('alertTitle').innerHTML = '⚠️ แจ้งเตือนการสแกนใบหน้า';
+           getEl('alertBody').innerHTML = errMsg;
+           getEl('alertModal').classList.add('show');
+       }).processFaceScan({ keyCode: appState.keyCode, customerName: appState.reading.customerName || 'Customer', reading: appState.reading, imageBase64: capturedBase64 });
+    }
+
+    let idleSeconds = 0;
+    const IDLE_LIMIT_SECONDS = 180; 
+
+    function resetIdleTimer() { idleSeconds = 0; }
+
+    window.addEventListener('mousemove', resetIdleTimer);
+    window.addEventListener('keydown', resetIdleTimer);
+    window.addEventListener('scroll', resetIdleTimer, true);
+    window.addEventListener('touchstart', resetIdleTimer);
+    window.addEventListener('click', resetIdleTimer);
+
+    setInterval(() => {
+        if (appState.loggedIn && appState.keyCode && appState.keyInfo && !appState.keyInfo.isReadOnly) {
+            idleSeconds++;
+            if (idleSeconds >= IDLE_LIMIT_SECONDS) {
+                idleSeconds = 0; 
+                toast("ไม่มีการใช้งานหน้าจอเกินกำหนด ระบบกำลังนำท่านออกเพื่อรักษาโควตาเวลา...", true, true);
+                triggerLogoutAction(); 
+            }
+        }
+    }, 1000);
+
+    function fireConfetti() {
+        var duration = 3000; 
+        var end = Date.now() + duration;
+        (function frame() {
+            confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#f4ca64', '#10b981', '#ffffff'] });
+            confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#f4ca64', '#10b981', '#ffffff'] });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        }());
+    }
+  </script>
+</body>
+</html>
