@@ -533,7 +533,8 @@
   </div> 
 
   <script>
-     // ============================================================================
+
+    // ============================================================================
     // เพิ่มใหม่: Proxy จำลองคำสั่ง google.script.run ให้ทำงานข้ามโดเมนได้ (สำหรับ GitHub Pages)
     // ============================================================================
      // ============================================================================
@@ -755,39 +756,9 @@
                 document.getElementById('slipUploadInput').value = ''; 
                 
                 if (res && res.ok && res.keyCode) {
-                   // 1. กรอก Key ลงในช่อง Input รอก่อน
+                   toast('✅ ยืนยันสลิปสำเร็จ! กำลังพาท่านเข้าสู่ระบบ...', false, true);
                    document.getElementById('keyInput').value = res.keyCode;
-                   
-                   // 2. เด้งหน้าต่าง Modal โชว์รหัส Key ให้ลูกค้าเห็นชัดๆ
-                   document.getElementById('alertTitle').innerHTML = '🎉 ชำระเงินสำเร็จ!';
-                   document.getElementById('alertBody').innerHTML = `
-                       <div style="text-align:center;">
-                           <p style="color:#34d399; font-weight:bold; font-size:1.1rem; margin-top:0;">รับ Access Key สำหรับเข้าใช้งาน</p>
-                           <div style="background:rgba(255,255,255,0.05); border:2px dashed #f4ca64; padding:15px; border-radius:12px; margin:15px 0;">
-                               <span style="font-size:1.5rem; font-weight:800; color:#f4ca64; letter-spacing:2px;">${res.keyCode}</span>
-                           </div>
-                           <p class="muted" style="font-size:0.95rem; line-height:1.6; margin-bottom:0;">
-                               <b>คำแนะนำ:</b> กรุณา <span style="color:#f87171;">แคปหน้าจอ</span> หรือ <span style="color:#f87171;">คัดลอกรหัส</span> นี้เก็บไว้<br>
-                               เพื่อใช้ล็อกอินเข้ามาดูประวัติคำทำนายย้อนหลังได้ 30 วันครับ
-                           </p>
-                           
-                           <button class="btn" style="width:100%; margin-top:20px; padding:14px; font-size:1.1rem; box-shadow: 0 4px 15px rgba(244,202,100,0.3);" 
-                               onclick="navigator.clipboard.writeText('${res.keyCode}').then(() => { 
-                                   document.getElementById('alertModal').classList.remove('show'); 
-                                   document.querySelector('#alertModal .modal-actions').style.display = 'flex'; 
-                                   setTimeout(() => document.getElementById('loginBtn').click(), 400);
-                               })">
-                               📋 คัดลอกรหัส & เข้าสู่ระบบ
-                           </button>
-                       </div>
-                   `;
-                   
-                   // 3. ซ่อนปุ่ม "รับทราบ" แบบเดิมของ Modal ทิ้งไปชั่วคราว เพื่อให้ใช้ปุ่มคัดลอกด้านบนแทน
-                   const actionsDiv = document.querySelector('#alertModal .modal-actions');
-                   if (actionsDiv) actionsDiv.style.display = 'none'; 
-                   
-                   // 4. แสดงหน้าต่าง Modal
-                   document.getElementById('alertModal').classList.add('show');
+                   setTimeout(() => { document.getElementById('loginBtn').click(); }, 1500);
                 }
              }).withFailureHandler((err) => {
                 hideLoading();
