@@ -533,6 +533,7 @@
   </div> 
 
   <script>
+    <script>
 
     // ============================================================================
     // เพิ่มใหม่: Proxy จำลองคำสั่ง google.script.run ให้ทำงานข้ามโดเมนได้ (สำหรับ GitHub Pages)
@@ -540,7 +541,7 @@
      // ============================================================================
     // แก้ไขใหม่ล่าสุด: Proxy จำลองคำสั่ง google.script.run แบบแยก Instance (ป้องกัน Callback ตีกัน)
     // ============================================================================
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6ZxavqvlTF9Bl2nv6DBx_c67V186qPfQuzYUp79e5c3293Gfsc6EuOr5sm7x4NZed0w/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzdsjLE2Dj4-lRE8izW9DfK7Sy40QWpg92lou96memlzDNGMatX1qmHEDDk74MXv63pPg/exec";
 
     const google = {
       script: {
@@ -602,6 +603,7 @@
     
     
     // โค้ดเดิมของคุณทั้งหมดจะอยู่ต่อจากบรรทัดนี้...
+    const uniqueClientId = 'SSID-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 
     let uniqueClientId = localStorage.getItem('horo_client_id');
     if (!uniqueClientId) {
@@ -756,9 +758,39 @@
                 document.getElementById('slipUploadInput').value = ''; 
                 
                 if (res && res.ok && res.keyCode) {
-                   toast('✅ ยืนยันสลิปสำเร็จ! กำลังพาท่านเข้าสู่ระบบ...', false, true);
+                   // 1. กรอก Key ลงในช่อง Input รอก่อน
                    document.getElementById('keyInput').value = res.keyCode;
-                   setTimeout(() => { document.getElementById('loginBtn').click(); }, 1500);
+                   
+                   // 2. เด้งหน้าต่าง Modal โชว์รหัส Key ให้ลูกค้าเห็นชัดๆ
+                   document.getElementById('alertTitle').innerHTML = '🎉 ชำระเงินสำเร็จ!';
+                   document.getElementById('alertBody').innerHTML = `
+                       <div style="text-align:center;">
+                           <p style="color:#34d399; font-weight:bold; font-size:1.1rem; margin-top:0;">รับ Access Key สำหรับเข้าใช้งาน</p>
+                           <div style="background:rgba(255,255,255,0.05); border:2px dashed #f4ca64; padding:15px; border-radius:12px; margin:15px 0;">
+                               <span style="font-size:1.5rem; font-weight:800; color:#f4ca64; letter-spacing:2px;">${res.keyCode}</span>
+                           </div>
+                           <p class="muted" style="font-size:0.95rem; line-height:1.6; margin-bottom:0;">
+                               <b>คำแนะนำ:</b> กรุณา <span style="color:#f87171;">แคปหน้าจอ</span> หรือ <span style="color:#f87171;">คัดลอกรหัส</span> นี้เก็บไว้<br>
+                               เพื่อใช้ล็อกอินเข้ามาดูประวัติคำทำนายย้อนหลังได้ 30 วันครับ
+                           </p>
+                           
+                           <button class="btn" style="width:100%; margin-top:20px; padding:14px; font-size:1.1rem; box-shadow: 0 4px 15px rgba(244,202,100,0.3);" 
+                               onclick="navigator.clipboard.writeText('${res.keyCode}').then(() => { 
+                                   document.getElementById('alertModal').classList.remove('show'); 
+                                   document.querySelector('#alertModal .modal-actions').style.display = 'flex'; 
+                                   setTimeout(() => document.getElementById('loginBtn').click(), 400);
+                               })">
+                               📋 คัดลอกรหัส & เข้าสู่ระบบ
+                           </button>
+                       </div>
+                   `;
+                   
+                   // 3. ซ่อนปุ่ม "รับทราบ" แบบเดิมของ Modal ทิ้งไปชั่วคราว เพื่อให้ใช้ปุ่มคัดลอกด้านบนแทน
+                   const actionsDiv = document.querySelector('#alertModal .modal-actions');
+                   if (actionsDiv) actionsDiv.style.display = 'none'; 
+                   
+                   // 4. แสดงหน้าต่าง Modal
+                   document.getElementById('alertModal').classList.add('show');
                 }
              }).withFailureHandler((err) => {
                 hideLoading();
