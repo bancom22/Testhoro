@@ -533,13 +533,13 @@
   </div> 
 
   <script>
-       // ============================================================================
+    // ============================================================================
     // เพิ่มใหม่: Proxy จำลองคำสั่ง google.script.run ให้ทำงานข้ามโดเมนได้ (สำหรับ GitHub Pages)
     // ============================================================================
      // ============================================================================
     // แก้ไขใหม่ล่าสุด: Proxy จำลองคำสั่ง google.script.run แบบแยก Instance (ป้องกัน Callback ตีกัน)
     // ============================================================================
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzdsjLE2Dj4-lRE8izW9DfK7Sy40QWpg92lou96memlzDNGMatX1qmHEDDk74MXv63pPg/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6ZxavqvlTF9Bl2nv6DBx_c67V186qPfQuzYUp79e5c3293Gfsc6EuOr5sm7x4NZed0w/exec";
 
     const google = {
       script: {
@@ -711,13 +711,19 @@
              
              // --- จัดการแสดงราคาและ QR Code (อัปเดตใช้ Promptpay.io) ---
              const price = settings.SLIP_PRICE || '69'; 
-             const acc = settings.PAYMENT_ACCOUNT || '3410320318'; 
+             let acc = settings.PAYMENT_ACCOUNT || '3410320318'; 
+             
+             // [เพิ่มโค้ด 4 บรรทัดนี้]: ดักจับและเติมเลข 0 กลับเข้าไปถ้าโดนฐานข้อมูลตัดทิ้ง
+             acc = String(acc).trim();
+             if (acc.length === 9 && !acc.startsWith('0')) {
+                 acc = '0' + acc;
+             }
              
              const uiPriceEl = document.getElementById('uiSlipPrice');
              if (uiPriceEl) uiPriceEl.innerText = price;
              
              const uiAccEl = document.getElementById('uiPaymentAcc');
-             if (uiAccEl) uiAccEl.innerText = acc;
+             if (uiAccEl) uiAccEl.innerText = acc; // ตัวเลขที่ลูกค้ากดคัดลอกจะกลับมามี 0 นำหน้า
              
              // ใช้ API ของ Promptpay.io ที่เสถียรที่สุดสำหรับสร้าง QR Code พร้อมเพย์ไทย
              const qrUrl = `https://promptpay.io/${acc}/${price}.png`;
