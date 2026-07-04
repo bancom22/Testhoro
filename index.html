@@ -534,6 +534,9 @@
   </div> 
 
   <script>
+    // เพิ่มใหม่: Proxy จำลองคำสั่ง google.script.run ให้ทำงานข้ามโดเมนได้ (สำหรับ GitHub Pages)
+    // ============================================================================
+     // ============================================================================
     // แก้ไขใหม่ล่าสุด: Proxy จำลองคำสั่ง google.script.run แบบแยก Instance (ป้องกัน Callback ตีกัน)
     // ============================================================================
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzdsjLE2Dj4-lRE8izW9DfK7Sy40QWpg92lou96memlzDNGMatX1qmHEDDk74MXv63pPg/exec";
@@ -595,8 +598,10 @@
         }
       });
     }
-
     
+    
+    // โค้ดเดิมของคุณทั้งหมดจะอยู่ต่อจากบรรทัดนี้...
+
     let uniqueClientId = localStorage.getItem('horo_client_id');
     if (!uniqueClientId) {
       uniqueClientId = 'SSID-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
@@ -707,6 +712,7 @@
              const price = settings.SLIP_PRICE || '69'; 
              let acc = settings.PAYMENT_ACCOUNT || '3410320318'; 
              
+             // [เพิ่มโค้ด 4 บรรทัดนี้]: ดักจับและเติมเลข 0 กลับเข้าไปถ้าโดนฐานข้อมูลตัดทิ้ง
              acc = String(acc).trim();
              if (acc.length === 9 && !acc.startsWith('0')) {
                  acc = '0' + acc;
@@ -716,7 +722,7 @@
              if (uiPriceEl) uiPriceEl.innerText = price;
              
              const uiAccEl = document.getElementById('uiPaymentAcc');
-             if (uiAccEl) uiAccEl.innerText = acc;
+             if (uiAccEl) uiAccEl.innerText = acc; // ตัวเลขที่ลูกค้ากดคัดลอกจะกลับมามี 0 นำหน้า
              
              // ใช้ API ของ Promptpay.io สร้างรูป
              const qrUrl = `https://promptpay.io/${acc}/${price}.png`;
@@ -729,6 +735,7 @@
                  qrImgEl.style.display = 'block'; 
                  if(qrLoadingText) qrLoadingText.style.display = 'none';
              }
+         }
       }).getPublicSettings();
     });
 
