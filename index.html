@@ -258,15 +258,16 @@
 
       <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 24px; max-width: 400px; margin: 0 auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.2);">
         <h3 style="color: #34d399; margin-top: 0; font-size: 1.25rem;">💰 ซื้อรหัสเข้าดูดวง (ออโต้)</h3>
-        <p class="muted" style="font-size: 0.95rem; margin-bottom: 16px; line-height: 1.6;">สแกนชำระเงิน <strong id="uiSlipPrice" style="color:#fff; font-size:1.1rem;">69</strong> บาท และแนบสลิปเพื่อรับรหัสเข้าใช้งานได้ทันที</p>
+        <p class="muted" style="font-size: 0.95rem; margin-bottom: 16px; line-height: 1.6;">สแกนชำระเงิน <strong id="uiSlipPrice" style="color:#fff; font-size:1.1rem;">...</strong> บาท และแนบสลิปเพื่อรับรหัสเข้าใช้งานได้ทันที</p>
         
-        <div style="background: #fff; padding: 12px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-          <img id="promptpayQrImg" src="" alt="PromptPay QR Code" style="width: 160px; height: 160px; border-radius: 8px; display: block;">
+        <div style="background: #fff; padding: 12px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); min-height: 160px; min-width: 160px; align-items: center; justify-content: center;">
+          <img id="promptpayQrImg" src="" alt="PromptPay QR Code" style="width: 160px; height: 160px; border-radius: 8px; display: none;">
+          <div id="qrLoadingText" style="color:#888; font-size: 0.9rem; margin-top: 60px;">กำลังสร้าง QR...</div>
         </div>
         
         <div style="margin-bottom: 20px;">
            <span style="color:#a7f3d0; font-size:0.9rem;">พร้อมเพย์/เลขบัญชี:</span><br>
-           <strong id="uiPaymentAcc" style="color:#fff; font-size:1.2rem; letter-spacing: 1px;">0868679991</strong>
+           <strong id="uiPaymentAcc" style="color:#fff; font-size:1.2rem; letter-spacing: 1px;">กำลังดึงข้อมูล...</strong>
            <button class="btn-action btn-copy" style="padding:4px 8px; margin-left:8px; border-radius: 8px; font-weight: bold; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; cursor:pointer;" onclick="navigator.clipboard.writeText(document.getElementById('uiPaymentAcc').innerText).then(()=>toast('คัดลอกเลขบัญชีแล้ว'))">📋 คัดลอก</button>
         </div>
 
@@ -713,7 +714,6 @@
              const price = settings.SLIP_PRICE || '69'; 
              let acc = settings.PAYMENT_ACCOUNT || '3410320318'; 
              
-             // [เพิ่มโค้ด 4 บรรทัดนี้]: ดักจับและเติมเลข 0 กลับเข้าไปถ้าโดนฐานข้อมูลตัดทิ้ง
              acc = String(acc).trim();
              if (acc.length === 9 && !acc.startsWith('0')) {
                  acc = '0' + acc;
@@ -723,13 +723,19 @@
              if (uiPriceEl) uiPriceEl.innerText = price;
              
              const uiAccEl = document.getElementById('uiPaymentAcc');
-             if (uiAccEl) uiAccEl.innerText = acc; // ตัวเลขที่ลูกค้ากดคัดลอกจะกลับมามี 0 นำหน้า
+             if (uiAccEl) uiAccEl.innerText = acc;
              
-             // ใช้ API ของ Promptpay.io ที่เสถียรที่สุดสำหรับสร้าง QR Code พร้อมเพย์ไทย
+             // ใช้ API ของ Promptpay.io สร้างรูป
              const qrUrl = `https://promptpay.io/${acc}/${price}.png`;
              const qrImgEl = document.getElementById('promptpayQrImg');
-             if (qrImgEl) qrImgEl.src = qrUrl;
-         }
+             const qrLoadingText = document.getElementById('qrLoadingText');
+             
+             if (qrImgEl) {
+                 qrImgEl.src = qrUrl;
+                 // เมื่อดึงข้อมูลเสร็จ ให้ซ่อนตัวอักษรโหลด และโชว์รูป QR ขึ้นมาแทน
+                 qrImgEl.style.display = 'block'; 
+                 if(qrLoadingText) qrLoadingText.style.display = 'none';
+             }
       }).getPublicSettings();
     });
 
